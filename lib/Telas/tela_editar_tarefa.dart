@@ -25,6 +25,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
   dynamic corSelecionada = Colors.black;
   bool exibirDefinirHora = false;
   bool mudarStatus = false;
+  bool exibirMudarStatus = true;
   String status = "";
   final TextEditingController _controllerTitulo =
       TextEditingController(text: "");
@@ -58,6 +59,12 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
     _controllerTitulo.text = widget.item.titulo;
     _controllerConteudo.text = widget.item.conteudo;
     status = widget.item.status;
+    print(status);
+    if (status.contains(Constantes.statusEmProgresso)) {
+      setState(() {
+        exibirMudarStatus = false;
+      });
+    }
     // recuperando a data e convertendo ela de string para o tipo data
     data = DateFormat("dd/MM/yyyy", "pt_BR").parse(widget.item.data);
     DateTime? converterHora;
@@ -108,7 +115,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
   // metodo para atualizar os dados no banco de dados
   atualizarDados() async {
     // linha para incluir os dados
-    if(mudarStatus && status.contains(Constantes.statusConcluido)){
+    if (mudarStatus && status.contains(Constantes.statusConcluido)) {
       status = Constantes.statusEmProgresso;
     }
     Map<String, dynamic> linha = {
@@ -118,7 +125,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
       BancoDeDados.columnTarefaData: '${data.day}/${data.month}/${data.year}',
       BancoDeDados.columnTarefaHora: horaFormatada.toString(),
       BancoDeDados.columnTarefaCor: corSelecionada.toString(),
-      BancoDeDados.columnTarefaStatus: status ,
+      BancoDeDados.columnTarefaStatus: status,
       BancoDeDados.columnTarefaFavorito: false,
     };
     await bancoDados.atualizar(linha);
@@ -313,92 +320,95 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                             SizedBox(
-                               width: 160,
-                               child:  Column(
-                                 children: [
-                                   Text(Textos.txtData,
-                                       style: const TextStyle(
-                                           fontSize: 17,
-                                           color: Colors.black,
-                                           fontWeight: FontWeight.bold)),
-                                   SizedBox(
-                                     height: 60,
-                                     child: TextField(
-                                       readOnly: true,
-                                       onTap: () async {
-                                         DateTime? novaData =
-                                         await showDatePicker(
-                                             builder: (context, child) {
-                                               return Theme(
-                                                   data: ThemeData.dark()
-                                                       .copyWith(
-                                                     colorScheme:
-                                                     const ColorScheme
-                                                         .light(
-                                                       primary: PaletaCores
-                                                           .corAzulCianoClaro,
-                                                       onPrimary:
-                                                       Colors.white,
-                                                       onSurface:
-                                                       Colors.black,
-                                                     ),
-                                                     dialogBackgroundColor:
-                                                     Colors.white,
-                                                   ),
-                                                   child: child!);
-                                             },
-                                             context: context,
-                                             initialDate: data,
-                                             firstDate: DateTime(2000),
-                                             lastDate: DateTime(2100));
+                              SizedBox(
+                                width: 160,
+                                child: Column(
+                                  children: [
+                                    Text(Textos.txtData,
+                                        style: const TextStyle(
+                                            fontSize: 17,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold)),
+                                    SizedBox(
+                                      height: 60,
+                                      child: TextField(
+                                        readOnly: true,
+                                        onTap: () async {
+                                          DateTime? novaData =
+                                              await showDatePicker(
+                                                  builder: (context, child) {
+                                                    return Theme(
+                                                        data: ThemeData.dark()
+                                                            .copyWith(
+                                                          colorScheme:
+                                                              const ColorScheme
+                                                                  .light(
+                                                            primary: PaletaCores
+                                                                .corAzulCianoClaro,
+                                                            onPrimary:
+                                                                Colors.white,
+                                                            onSurface:
+                                                                Colors.black,
+                                                          ),
+                                                          dialogBackgroundColor:
+                                                              Colors.white,
+                                                        ),
+                                                        child: child!);
+                                                  },
+                                                  context: context,
+                                                  initialDate: data,
+                                                  firstDate: DateTime(2000),
+                                                  lastDate: DateTime(2100));
 
-                                         if (novaData == null) return;
-                                         setState(() {
-                                           data = novaData;
-                                         });
-                                       },
-                                       decoration: InputDecoration(
-                                         hintText:
-                                         '${data.day}/${data.month}/${data.year}',
-                                         prefixIcon:
-                                         const Icon(Icons.date_range),
-                                         enabledBorder: OutlineInputBorder(
-                                           borderSide: const BorderSide(
-                                               width: 1, color: Colors.black),
-                                           borderRadius:
-                                           BorderRadius.circular(10),
-                                         ),
-                                         focusedBorder: OutlineInputBorder(
-                                           borderSide: const BorderSide(
-                                               width: 1, color: Colors.black),
-                                           borderRadius:
-                                           BorderRadius.circular(5),
-                                         ),
-                                       ),
-                                     ),
-                                   ),
-                                   Column(
-                                     children: [
-                                       SizedBox(
-                                         width: 160,
-                                         child: Text(Textos.txtMudarStatus,
-                                             textAlign: TextAlign.center),
-                                       ),
-                                       Switch(
-                                           value: mudarStatus,
-                                           activeColor:
-                                           PaletaCores.corAzulCianoClaro,
-                                           onChanged: (value) {
-                                             setState(() {
-                                               mudarStatus = value;
-                                             });
-                                           }),
-                                     ],
-                                   ),
-                                 ],
-                               ),
-                             ),
+                                          if (novaData == null) return;
+                                          setState(() {
+                                            data = novaData;
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              '${data.day}/${data.month}/${data.year}',
+                                          prefixIcon:
+                                              const Icon(Icons.date_range),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(
+                                                width: 1, color: Colors.black),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(
+                                                width: 1, color: Colors.black),
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: exibirMudarStatus,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            width: 160,
+                                            child: Text(Textos.txtMudarStatus,
+                                                textAlign: TextAlign.center),
+                                          ),
+                                          Switch(
+                                              value: mudarStatus,
+                                              activeColor:
+                                                  PaletaCores.corAzulCianoClaro,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  mudarStatus = value;
+                                                });
+                                              }),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                               SizedBox(
                                 width: 160,
                                 child: Column(

@@ -14,10 +14,12 @@ class TelaTarefaConcluidaProgresso extends StatefulWidget {
   final String tipoExibicao;
 
   @override
-  State<TelaTarefaConcluidaProgresso> createState() => _TelaTarefaConcluidaProgressoState();
+  State<TelaTarefaConcluidaProgresso> createState() =>
+      _TelaTarefaConcluidaProgressoState();
 }
 
-class _TelaTarefaConcluidaProgressoState extends State<TelaTarefaConcluidaProgresso> {
+class _TelaTarefaConcluidaProgressoState
+    extends State<TelaTarefaConcluidaProgresso> {
   List<TarefaModelo> listaTarefas = [];
   List<TarefaModelo> listaAuxiliar = [];
   DateTime dataInicial = DateTime(2022, 07, 02);
@@ -31,9 +33,9 @@ class _TelaTarefaConcluidaProgressoState extends State<TelaTarefaConcluidaProgre
   void initState() {
     super.initState();
     consultarTarefas(); //chamando metodo
-    if(widget.tipoExibicao.contains(Constantes.telaExibirConcluido)){
+    if (widget.tipoExibicao.contains(Constantes.telaExibirConcluido)) {
       nomeTela = Textos.txtTelaTarefaConcluida;
-    }else{
+    } else {
       nomeTela = Textos.txtTelaTarefaProgresso;
     }
   }
@@ -72,8 +74,10 @@ class _TelaTarefaConcluidaProgressoState extends State<TelaTarefaConcluidaProgre
       });
     }
 
-    pegarDataAntiga(); // chamando metodo
-    adicionarItensListaAuxiliar();
+    if (listaTarefas.isNotEmpty) {
+      pegarDataAntiga(); // chamando metodo
+      adicionarItensListaAuxiliar();
+    }
   }
 
   adicionarItens(var linha, var instanciaCor, var favorito) {
@@ -241,8 +245,7 @@ class _TelaTarefaConcluidaProgressoState extends State<TelaTarefaConcluidaProgre
                               child: Text(
                                 Textos.txtLegListaVaziaDataSelecionada,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
+                                style: const TextStyle(fontSize: 20),
                               ));
                         }
                       },

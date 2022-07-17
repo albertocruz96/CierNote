@@ -18,7 +18,6 @@ class TelaAdionarTarefa extends StatefulWidget {
 class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
   DateTime data = DateTime.now();
   TimeOfDay? hora = TimeOfDay.now();
-  //
   dynamic horaFormatada;
   dynamic corSelecionada = Colors.black;
   bool exibirDefinirHora = false;
@@ -31,7 +30,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
   //variavel usada para validar o formulario
   final _chaveFormulario = GlobalKey<FormState>();
 
-  // referencia nossa classe para gerenciar o banco de dados
+  // referencia classe para gerenciar o banco de dados
   final bancoDados = BancoDeDados.instance;
 
   //metodo para formatar a hora para o formato 12 horas

@@ -34,7 +34,11 @@ dependencies:
   # sql lite para banco de dados local
   sqflite: ^2.0.3
   path_provider: ^2.0.11
+  # necessario para o data time horizontal
   date_picker_timeline:
+# neessario para as notificacaoes
+  workmanager: ^0.5.0
+  flutter_local_notifications: ^9.7.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -63,7 +67,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/imagens/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

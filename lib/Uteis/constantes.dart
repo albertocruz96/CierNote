@@ -14,6 +14,13 @@ class Constantes {
   static const String statusEmProgresso = "Em Progresso";
   static const String statusConcluido = "Concluido";
 
+  static const String popUpMenuEditar = "editar";
+  static const String popUpMenuFavoritar = "favorito";
+  static const String popUpMenuNotificacao = "notificacao";
+
+  static const String canalNotificacaoPadrao = "Notificacoes Padrão";
+  static const String canalNotificacaoPermanentes = "Notificacoes Permanentes";
+
   static const nomeBanco = "tarefasBanco.db";
   static const nomeTabela = 'tarefas';
   static const bancoId = 'id';

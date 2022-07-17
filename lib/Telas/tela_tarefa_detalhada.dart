@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:ciernote/Uteis/banco_de_dados.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../Uteis/constantes.dart';
 import '../Uteis/paleta_cores.dart';
@@ -22,6 +23,15 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
   late bool ativarFavorito;
   late bool exibirBotoes = true;
   var dadosTela = {};
+  DateTime data = DateTime(2022, 07, 02);
+  TimeOfDay? hora = const TimeOfDay(hour: 19, minute: 00);
+
+  String conteudoNotificacao = "";
+  String tituloNotificacao = "";
+  int idNotificacao = 0;
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
@@ -32,6 +42,28 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
         exibirBotoes = false;
       });
     }
+    idNotificacao = widget.item.id;
+    tituloNotificacao = widget.item.titulo;
+    conteudoNotificacao = widget.item.conteudo;
+    iniciarNotificacao();
+  }
+
+  iniciarNotificacao() {
+    var initializationSettingsAndroid =
+        const AndroidInitializationSettings("@mipmap/ic_launcher");
+    var initializationSettingsIOS = const IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (payload) => SelectNotification(payload!));
+  }
+
+  Future SelectNotification(String payload) async {
+    var dadosTela = {};
+    dadosTela[Constantes.telaParametroDetalhes] = widget.item;
+    Navigator.pushNamed(context, Constantes.telaTarefaDetalhada,
+        arguments: dadosTela);
   }
 
   void atualizarFavoritoBanco() async {
@@ -98,6 +130,22 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
   Widget build(BuildContext context) {
     double alturaTela = MediaQuery.of(context).size.height;
     double larguraTela = MediaQuery.of(context).size.width;
+
+    exibirNotificacao() async {
+      var android = const AndroidNotificationDetails(
+          "channelId", Constantes.canalNotificacaoPermanentes,
+          priority: Priority.max, importance: Importance.high,indeterminate: true,);
+      var iOS = const IOSNotificationDetails();
+      var plataform = NotificationDetails(android: android, iOS: iOS);
+      await flutterLocalNotificationsPlugin.show(
+        idNotificacao,
+        tituloNotificacao,
+        conteudoNotificacao,
+        plataform,
+        payload: "fdfsdf",
+      );
+    }
+
     return WillPopScope(
         child: Scaffold(
             appBar: AppBar(
@@ -113,75 +161,96 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                         fontWeight: FontWeight.bold)),
               ),
               actions: [
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 5.0, vertical: 0.0),
-                  width: 40,
-                  height: 40,
-                  child: FloatingActionButton(
-                    backgroundColor: Colors.white,
-                    onPressed: () {
+                PopupMenuButton(
+                  onSelected: (value) {
+                    if (value == Constantes.popUpMenuEditar) {
                       var dadosTela = {};
                       dadosTela[Constantes.telaParametroDetalhes] = widget.item;
                       Navigator.pushNamed(context, Constantes.telaTarefaEditar,
                           arguments: dadosTela);
-                    },
-                    heroTag: "btnEditar",
-                    child: const Icon(
-                      Icons.edit,
-                      size: 30,
-                      color: PaletaCores.corAzulCianoClaro,
-                    ),
-                  ),
-                ),
-                Visibility(
-                    visible: exibirBotoes,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 0.0),
-                      width: 40,
-                      height: 40,
-                      child: FloatingActionButton(
-                          backgroundColor: Colors.white,
-                          onPressed: () {
-                            atualizarFavoritoBanco();
-                            if (ativarFavorito) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text(Textos.sucessoAdicaoFavorito)));
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text(Textos.sucessoRemocaoFavorito)));
-                            }
-                          },
-                          heroTag: "btnFavorito",
-                          child: LayoutBuilder(
-                            builder: (context, constraints) {
-                              if (ativarFavorito) {
-                                return const Icon(
-                                  Icons.favorite_outlined,
-                                  size: 30,
-                                  color: PaletaCores.corAzulCianoClaro,
-                                );
-                              } else {
-                                return const Icon(
-                                  Icons.favorite_border_outlined,
-                                  size: 30,
-                                  color: PaletaCores.corAzulCianoClaro,
-                                );
-                              }
-                            },
-                          )),
-                    ))
+                    } else if (value == Constantes.popUpMenuFavoritar) {
+                      atualizarFavoritoBanco();
+                      if (ativarFavorito) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(Textos.sucessoAdicaoFavorito)));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(Textos.sucessoRemocaoFavorito)));
+                      }
+                    } else if (value == Constantes.popUpMenuNotificacao) {
+                      exibirNotificacao();
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                        value: Constantes.popUpMenuEditar,
+                        child: Row(
+                          children: const [
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Icon(
+                                Icons.edit,
+                                size: 30,
+                                color: PaletaCores.corAzulCianoClaro,
+                              ),
+                            ),
+                            Text("Editar")
+                          ],
+                        )),
+                    PopupMenuItem(
+                        value: Constantes.popUpMenuFavoritar,
+                        enabled: exibirBotoes,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    if (ativarFavorito) {
+                                      return const Icon(
+                                        Icons.favorite_outlined,
+                                        size: 30,
+                                        color: PaletaCores.corAzulCianoClaro,
+                                      );
+                                    } else {
+                                      return const Icon(
+                                        Icons.favorite_border_outlined,
+                                        size: 30,
+                                        color: PaletaCores.corAzulCianoClaro,
+                                      );
+                                    }
+                                  },
+                                )),
+                            const Text("Favoritar")
+                          ],
+                        )),
+                    PopupMenuItem(
+                        value: Constantes.popUpMenuNotificacao,
+                        child: Row(
+                          children: const [
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Icon(
+                                Icons.notification_add,
+                                size: 30,
+                                color: PaletaCores.corAzulCianoClaro,
+                              ),
+                            ),
+                            Text("Ativar Notificacao")
+                          ],
+                        )),
+                  ],
+                )
               ],
+              iconTheme: const IconThemeData(color: Colors.black),
               leading: IconButton(
                 //setando tamanho do icone
                 iconSize: 30,
                 onPressed: () {
-                  Navigator.pop(context, Constantes.telaInicial);
+                  Navigator.pushNamed(context, Constantes.telaInicial);
                 },
                 icon: const Icon(Icons.arrow_back_outlined),
                 color: Colors.black,
@@ -397,7 +466,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                   )),
             )),
         onWillPop: () async {
-          Navigator.pop(context, Constantes.telaInicial);
+          Navigator.pushNamed(context, Constantes.telaInicial);
           return false;
         });
   }

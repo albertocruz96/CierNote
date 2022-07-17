@@ -3,10 +3,10 @@ import 'package:ciernote/Uteis/constantes.dart';
 import 'package:ciernote/Uteis/paleta_cores.dart';
 import 'package:ciernote/Widget/listagem_principal_tarefa_widget.dart';
 import 'package:flutter/material.dart';
-
 import '../Uteis/banco_de_dados.dart';
 import '../Uteis/textos.dart';
 import 'package:intl/intl.dart';
+
 
 class TelaPrincipal extends StatefulWidget {
   const TelaPrincipal({Key? key}) : super(key: key);
@@ -25,11 +25,14 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   final TextEditingController _controllerPesquisa =
       TextEditingController(text: "");
 
+
   @override
   @override
   void initState() {
     super.initState();
     consultarTarefas();
+
+
   }
 
   //metodo para realizar a consulta no banco de dados
@@ -87,6 +90,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     double alturaTela = MediaQuery.of(context).size.height;
     double larguraTela = MediaQuery.of(context).size.width;
 
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -132,7 +136,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 height: 40,
                 child: FloatingActionButton(
                   backgroundColor: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                  },
                   child: const Icon(
                     Icons.account_circle,
                     size: 30,
@@ -154,6 +159,13 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   scrollDirection: Axis.vertical,
                   child: Column(
                     children: [
+                      SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: Image.asset(
+                          'assets/imagens/logo_programa.png',
+                        ),
+                      ),
                       Container(
                         width: larguraTela,
                         margin: const EdgeInsets.symmetric(

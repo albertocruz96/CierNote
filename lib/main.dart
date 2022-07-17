@@ -1,7 +1,6 @@
 
 import 'package:ciernote/Uteis/paleta_cores.dart';
 import 'package:flutter/material.dart';
-
 import 'Uteis/constantes.dart';
 import 'Uteis/rotas.dart';
 import 'Uteis/textos.dart';
@@ -13,15 +12,14 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: Textos.nomeApp,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Boli',
-        primaryColor: PaletaCores.corAzulCianoClaro
-      ),
+          fontFamily: 'Boli', primaryColor: PaletaCores.corAzulCianoClaro),
       //definicoes usadas no date picker
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -30,7 +28,7 @@ class MyApp extends StatelessWidget {
       //setando o suporte da lingua usada no data picker
       supportedLocales: const [Locale('pt', 'BR')],
       //definindo rota inicial
-      initialRoute:  Constantes.telaInicial,
+      initialRoute: Constantes.telaInicial,
       onGenerateRoute: Rotas.generateRoute,
     );
   }
