@@ -10,6 +10,7 @@ class Constantes {
   static const String telaExibirConcluido = "telaConcluida";
   static const String telaExibirProgresso = "telaProgresso";
   static const String telaParametroDetalhes = "detalhesTarefa";
+  static String horaSemPrazo = "Sem Horário";
 
   static const String statusEmProgresso = "Em Progresso";
   static const String statusConcluido = "Concluido";
@@ -20,6 +21,10 @@ class Constantes {
 
   static const String canalNotificacaoPadrao = "Notificacoes Padrão";
   static const String canalNotificacaoPermanentes = "Notificacoes Permanentes";
+
+
+  static const String tipoNotiAgendada = "agendada";
+  static const String tipoNotiPermanente = "permanente";
 
   static const nomeBanco = "tarefasBanco.db";
   static const nomeTabela = 'tarefas';

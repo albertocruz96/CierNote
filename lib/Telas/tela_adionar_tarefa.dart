@@ -301,7 +301,8 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                                       child: child!);
                                                 },
                                                 context: context,
-                                                initialDate: data,
+                                                initialDate: data
+                                                    .add(const Duration(minutes: 30)),
                                                 firstDate: DateTime(2000),
                                                 lastDate: DateTime(2100));
 
@@ -404,7 +405,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(Textos.txtHoraSemPrazo),
+                                        Text(Constantes.horaSemPrazo),
                                         Switch(
                                             value: exibirDefinirHora,
                                             activeColor:
@@ -413,7 +414,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                               setState(() {
                                                 exibirDefinirHora = value;
                                                 horaFormatada =
-                                                    Textos.txtHoraSemPrazo;
+                                                    Constantes.horaSemPrazo;
                                                 // redefindo valor da variavel ao desativar o switch
                                                 if (!exibirDefinirHora) {
                                                   horaFormatada = hora;

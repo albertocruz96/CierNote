@@ -8,6 +8,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../Uteis/constantes.dart';
 import '../Uteis/paleta_cores.dart';
 import '../Uteis/textos.dart';
+import 'package:intl/intl.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class TarefaDetalhada extends StatefulWidget {
   const TarefaDetalhada({Key? key, required this.item}) : super(key: key);
@@ -23,8 +26,9 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
   late bool ativarFavorito;
   late bool exibirBotoes = true;
   var dadosTela = {};
-  DateTime data = DateTime(2022, 07, 02);
+  late dynamic diferencaHora;
   TimeOfDay? hora = const TimeOfDay(hour: 19, minute: 00);
+  DateTime data = DateTime(2022, 07, 02);
 
   String conteudoNotificacao = "";
   String tituloNotificacao = "";
@@ -51,15 +55,25 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
   iniciarNotificacao() {
     var initializationSettingsAndroid =
         const AndroidInitializationSettings("@mipmap/ic_launcher");
-    var initializationSettingsIOS = const IOSInitializationSettings();
+    var initializationSettingsIOS = const IOSInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+    );
+
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('America/Detroit'));
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (payload) => SelectNotification(payload!));
+        onSelectNotification: (payload) => SelectNotification());
+    if (!widget.item.hora.toString().contains(Constantes.horaSemPrazo)) {
+      formatarDataHora();
+    }
   }
 
-  Future SelectNotification(String payload) async {
+  Future SelectNotification() async {
     var dadosTela = {};
     dadosTela[Constantes.telaParametroDetalhes] = widget.item;
     Navigator.pushNamed(context, Constantes.telaTarefaDetalhada,
@@ -126,24 +140,68 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
         });
   }
 
+  // metodo responsavel por formatar a hora e a data para o padrao especificado
+  formatarDataHora() {
+    DateTime? converterHora;
+    converterHora = DateFormat("hh:mm").parse(widget.item.hora);
+    converterHora = DateFormat("hh:mm a").parse(widget.item.hora);
+    TimeOfDay horaFormatar =
+        TimeOfDay(hour: converterHora.hour, minute: converterHora.minute);
+    hora = horaFormatar;
+    data = DateFormat("dd/MM/yyyy", "pt_BR").parse(widget.item.data);
+  }
+
+  // metodo responsavel por criar o canal de notificacoes
+  criarCanalNotificacoes() {
+    var android = const AndroidNotificationDetails(
+      "channelId",
+      Constantes.canalNotificacaoPermanentes,
+      priority: Priority.max,
+      importance: Importance.high,
+      autoCancel: false,
+    );
+    var iOS = const IOSNotificationDetails();
+    var plataform = NotificationDetails(android: android, iOS: iOS);
+    return plataform;
+  }
+
   @override
   Widget build(BuildContext context) {
     double alturaTela = MediaQuery.of(context).size.height;
     double larguraTela = MediaQuery.of(context).size.width;
 
-    exibirNotificacao() async {
-      var android = const AndroidNotificationDetails(
-          "channelId", Constantes.canalNotificacaoPermanentes,
-          priority: Priority.max, importance: Importance.high,indeterminate: true,);
-      var iOS = const IOSNotificationDetails();
-      var plataform = NotificationDetails(android: android, iOS: iOS);
-      await flutterLocalNotificationsPlugin.show(
-        idNotificacao,
-        tituloNotificacao,
-        conteudoNotificacao,
-        plataform,
-        payload: "fdfsdf",
-      );
+    exibirNotificacao(String tipoNoti) async {
+      if (tipoNoti.contains(Constantes.tipoNotiAgendada)) {
+        // definindo que a variavel vai receber a DIFERENCA entre o horario atual do dispositivo
+        // e o horario salvo no banco de dados
+        Duration diferencaHora = tz.TZDateTime.now(tz.local).difference(
+            DateTime(
+                data.year, data.month, data.day, hora!.hour, hora!.minute));
+        // verificando se a variavel contem valor com sinal de negativo
+        if (diferencaHora.inSeconds.toString().contains("-")) {
+          diferencaHora = -(diferencaHora);
+          print(diferencaHora.inSeconds);
+        } else {
+          print(diferencaHora.inSeconds);
+        }
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+            idNotificacao,
+            tituloNotificacao,
+            conteudoNotificacao,
+            tz.TZDateTime.now(tz.local)
+                .add(Duration(minutes: diferencaHora.inSeconds)),
+            criarCanalNotificacoes(),
+            androidAllowWhileIdle: true,
+            uiLocalNotificationDateInterpretation:
+                UILocalNotificationDateInterpretation.absoluteTime);
+      } else {
+        await flutterLocalNotificationsPlugin.show(
+          idNotificacao,
+          tituloNotificacao,
+          conteudoNotificacao,
+          criarCanalNotificacoes(),
+        );
+      }
     }
 
     return WillPopScope(
@@ -164,6 +222,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                 PopupMenuButton(
                   onSelected: (value) {
                     if (value == Constantes.popUpMenuEditar) {
+                      //passando dados para a tela de edicao
                       var dadosTela = {};
                       dadosTela[Constantes.telaParametroDetalhes] = widget.item;
                       Navigator.pushNamed(context, Constantes.telaTarefaEditar,
@@ -178,7 +237,15 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                             content: Text(Textos.sucessoRemocaoFavorito)));
                       }
                     } else if (value == Constantes.popUpMenuNotificacao) {
-                      exibirNotificacao();
+                      // verificando qual tipo de notificacao sera exibida com base se existe horario
+                      // para disparar a notificacao ou nao
+                      if (widget.item.hora
+                          .toString()
+                          .contains(Constantes.horaSemPrazo)) {
+                        exibirNotificacao(Constantes.tipoNotiPermanente);
+                      } else {
+                        exibirNotificacao(Constantes.tipoNotiAgendada);
+                      }
                     }
                   },
                   itemBuilder: (context) => [

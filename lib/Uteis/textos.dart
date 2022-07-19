@@ -25,7 +25,7 @@ class Textos {
   static String txtTelaCriarTarefa = "Criar Tarefa";
   static String txtTituloTarefa = "Titulo da tarefa: ";
   static String txtTituloTarefaHint = "insira o titulo da tarefa";
-  static String txtHoraSemPrazo = "Sem Horário";
+
   static String txtMudarStatus = "Mudar status para Em Progresso";
 
   static String txtDescricaoTarefa = "Descrição:";
