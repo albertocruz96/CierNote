@@ -61,6 +61,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
       requestAlertPermission: false,
     );
 
+    // iniciando time zone para as notificacoes agendadas
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation('America/Detroit'));
     var initializationSettings = InitializationSettings(
@@ -132,7 +133,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                     bancoDados.excluir(widget.item.id);
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(Textos.sucessoExclusaoTarefa)));
-                    Navigator.pushNamed(context, Constantes.telaInicial);
+                    Navigator.pushReplacementNamed(context, Constantes.telaInicial);
                   },
                   child: const Text("Excluir"))
             ],
@@ -180,9 +181,6 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
         // verificando se a variavel contem valor com sinal de negativo
         if (diferencaHora.inSeconds.toString().contains("-")) {
           diferencaHora = -(diferencaHora);
-          print(diferencaHora.inSeconds);
-        } else {
-          print(diferencaHora.inSeconds);
         }
         await flutterLocalNotificationsPlugin.zonedSchedule(
             idNotificacao,
@@ -225,7 +223,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                       //passando dados para a tela de edicao
                       var dadosTela = {};
                       dadosTela[Constantes.telaParametroDetalhes] = widget.item;
-                      Navigator.pushNamed(context, Constantes.telaTarefaEditar,
+                      Navigator.pushReplacementNamed(context, Constantes.telaTarefaEditar,
                           arguments: dadosTela);
                     } else if (value == Constantes.popUpMenuFavoritar) {
                       atualizarFavoritoBanco();
@@ -295,6 +293,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                         )),
                     PopupMenuItem(
                         value: Constantes.popUpMenuNotificacao,
+                        enabled: exibirBotoes,
                         child: Row(
                           children: const [
                             SizedBox(
@@ -501,7 +500,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                                         SnackBar(
                                             content: Text(Textos
                                                 .sucessoConcluidoTarefa)));
-                                    Navigator.pushNamed(context,
+                                    Navigator.pushReplacementNamed(context,
                                         Constantes.telaTarefaConcluidaProgresso,
                                         arguments:
                                             Constantes.telaExibirConcluido);

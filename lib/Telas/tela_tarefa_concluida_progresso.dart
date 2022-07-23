@@ -3,6 +3,7 @@ import 'package:ciernote/Uteis/paleta_cores.dart';
 import 'package:ciernote/Widget/tarefa_widget.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
+import '../Consulta.dart';
 import '../Uteis/banco_de_dados.dart';
 import 'package:intl/intl.dart';
 import '../Uteis/constantes.dart';
@@ -25,6 +26,7 @@ class _TelaTarefaConcluidaProgressoState
   DateTime dataInicial = DateTime(2022, 07, 02);
   int quantidadeTarefas = 0;
   String nomeTela = "";
+  String tipoConsulta = "";
 
   // referencia a classepara gerenciar o banco de dados
   final bancoDados = BancoDeDados.instance;
@@ -32,70 +34,41 @@ class _TelaTarefaConcluidaProgressoState
   @override
   void initState() {
     super.initState();
-    consultarTarefas(); //chamando metodo
+    //verificando o tipo de exibicao da tela
     if (widget.tipoExibicao.contains(Constantes.telaExibirConcluido)) {
-      nomeTela = Textos.txtTelaTarefaConcluida;
+      nomeTela = Textos.txtTelaTarefaConcluida; // definindo o nome da tela
+      tipoConsulta = Constantes
+          .statusEmProgresso; // passando o tipo de status que sera removido da lista ao realizar a consulta
     } else {
-      nomeTela = Textos.txtTelaTarefaProgresso;
+      nomeTela = Textos.txtTelaTarefaProgresso; // definindo o nome da tela
+      tipoConsulta = Constantes
+          .statusConcluido; // passando o tipo de status que sera removido da lista ao realizar a consulta
     }
+    consultarTarefas(); // chamando metodo
   }
 
-  //metodo para realizar a consulta no banco de dados
-  void consultarTarefas() async {
-    // chamando metodo de consulta
-    final registros = await bancoDados.consultarLinhas();
-    // pegando os valores de cada linha e mudando o estado
-    // e atribuindo o valor a variaveis
-    for (var linha in registros) {
+  // metodo responsavel por realizar as consultas ao banco de dados
+  consultarTarefas() async {
+    // chamando metodo responsavel por pegar a lista de tarefas
+    await Consulta.consultarTarefasBanco(tipoConsulta).then((value) {
       setState(() {
-        String corString =
-            linha[Constantes.bancoCor].toString().split('(0x')[1].split(')')[0];
-        int valor = int.parse(corString, radix: 16);
-        Color instanciaCor = Color(valor);
-        //criando variavel para converter o valor
-        // salvo no banco para um valor boleano
-        bool favorito;
-        if (linha[Constantes.bancoFavorito].toString().contains("0")) {
-          favorito = false;
-        } else {
-          favorito = true;
-        }
-        // verificando o status da tarefa
-        if ((linha[Constantes.bancoStatus] == Constantes.statusConcluido) &&
-            widget.tipoExibicao.contains(Constantes.telaExibirConcluido)) {
-          // adicionando itens a lista
-          adicionarItens(linha, instanciaCor, favorito);
-        } else if ((linha[Constantes.bancoStatus] ==
-                Constantes.statusEmProgresso) &&
-            widget.tipoExibicao.contains(Constantes.telaExibirProgresso)) {
-          // adicionando itens a lista
-          adicionarItens(linha, instanciaCor, favorito);
+        listaTarefas = value;
+        if (listaTarefas.isNotEmpty) {
+          pegarDataAntiga();
+          adicionarItensListaAuxiliar();
         }
       });
-    }
-
-    if (listaTarefas.isNotEmpty) {
-      pegarDataAntiga(); // chamando metodo
-      adicionarItensListaAuxiliar();
-    }
+    });
   }
 
-  adicionarItens(var linha, var instanciaCor, var favorito) {
-    return listaTarefas.add(TarefaModelo(
-        id: linha[Constantes.bancoId],
-        titulo: linha[Constantes.bancoTitulo],
-        status: linha[Constantes.bancoStatus],
-        hora: linha[Constantes.bancoHora],
-        data: linha[Constantes.bancoData],
-        conteudo: linha[Constantes.bancoConteudo],
-        corTarefa: instanciaCor,
-        favorito: favorito));
-  }
-
+  // metodo para adicionar itens a lista auxiliar
   adicionarItensListaAuxiliar() {
+    // percorrendo a lista principal para usar nas pesquisas pelas datas
     for (var element in listaTarefas) {
+      //adicionando cada elemento na lista auxiliar
       listaAuxiliar.add(element);
     }
+    //pegando o tamanho  da lista
     quantidadeTarefas = listaAuxiliar.length;
   }
 
@@ -129,7 +102,6 @@ class _TelaTarefaConcluidaProgressoState
               iconTheme: const IconThemeData(color: Colors.black),
               backgroundColor: Colors.white,
               leading: IconButton(
-                //setando tamanho do icone
                 iconSize: 30,
                 onPressed: () {
                   Navigator.pushNamed(context, Constantes.telaInicial);
@@ -143,7 +115,7 @@ class _TelaTarefaConcluidaProgressoState
             child: Column(
               children: [
                 Text(
-                  "Você tem $quantidadeTarefas tarefas",
+                  "Total de tarefas : $quantidadeTarefas ",
                   style: const TextStyle(fontSize: 20),
                 ),
                 Container(
@@ -255,8 +227,8 @@ class _TelaTarefaConcluidaProgressoState
           ),
         ),
         onWillPop: () async {
-          Navigator.pushNamed(context, Constantes.telaInicial);
-          return false;
+          Navigator.popAndPushNamed(context, Constantes.telaInicial);
+          return true;
         });
   }
 }

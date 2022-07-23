@@ -144,7 +144,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                   child: const Text("Cancelar")),
               TextButton(
                   onPressed: () =>
-                      Navigator.pushNamed(context, Constantes.telaInicial),
+                      Navigator.pushReplacementNamed(context, Constantes.telaInicial),
                   child: const Text("Sair"))
             ],
           );

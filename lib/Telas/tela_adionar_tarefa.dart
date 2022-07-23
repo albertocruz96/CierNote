@@ -86,7 +86,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
             title: Text(Textos.txtTituloAlertaSair),
             actions: [
               TextButton(
-                  onPressed: () => Navigator.pop(context, false),
+                  onPressed: () => Navigator.popAndPushNamed(context, Constantes.telaInicial),
                   child: const Text("Cancelar")),
               TextButton(
                   onPressed: () =>
@@ -185,7 +185,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                         inserirDados();
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(Textos.sucessoAdicaoTarefa)));
-                        Navigator.pushNamed(context, Constantes.telaInicial);
+                        Navigator.pushReplacementNamed(context, Constantes.telaInicial);
                       }
                     }
                   },

@@ -27,7 +27,7 @@ class _TarefaWidgetState extends State<TarefaWidget> {
             onPressed: () {
               var dadosTela = {};
               dadosTela[Constantes.telaParametroDetalhes] = widget.item;
-              Navigator.pushNamed(context, Constantes.telaTarefaDetalhada,
+              Navigator.pushReplacementNamed(context, Constantes.telaTarefaDetalhada,
                   arguments: dadosTela);
             },
             child: SizedBox(

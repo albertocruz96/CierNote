@@ -1,12 +1,13 @@
+import 'package:ciernote/Consulta.dart';
 import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:ciernote/Uteis/constantes.dart';
 import 'package:ciernote/Uteis/paleta_cores.dart';
 import 'package:ciernote/Widget/listagem_principal_tarefa_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../Uteis/banco_de_dados.dart';
 import '../Uteis/textos.dart';
 import 'package:intl/intl.dart';
-
 
 class TelaPrincipal extends StatefulWidget {
   const TelaPrincipal({Key? key}) : super(key: key);
@@ -18,61 +19,35 @@ class TelaPrincipal extends StatefulWidget {
 class _TelaPrincipalState extends State<TelaPrincipal> {
   // referencia nossa classe single para gerenciar o banco de dados
   final bancoDados = BancoDeDados.instance;
-  final List<TarefaModelo> tarefas = [];
+  List<TarefaModelo> tarefas = [];
+  List<TarefaModelo> tarefas2 = [];
   int quantidadeTarefas = 0;
   bool mudarVisualizacao = false;
   String nomeBotaoMudarVisualizacao = Textos.btnVerGrade;
   final TextEditingController _controllerPesquisa =
       TextEditingController(text: "");
 
-
   @override
   @override
   void initState() {
     super.initState();
-    consultarTarefas();
-
-
+    consultarTarefas(); // chamando metodo
   }
-
-  //metodo para realizar a consulta no banco de dados
-  void consultarTarefas() async {
-    final registros = await bancoDados.consultarLinhas();
-    for (var linha in registros) {
+// metodo responsavel por realizar as consultas ao banco de dados
+  consultarTarefas() async {
+    // chamando metodo responsavel por pegar a lista de tarefas
+    await Consulta.consultarTarefasBanco(Constantes.statusConcluido).then((value) {
       setState(() {
-        dynamic cor = linha[Constantes.bancoCor];
-        String corString = cor.toString().split('(0x')[1].split(')')[0];
-        int valor = int.parse(corString, radix: 16);
-        Color instanciaCor = Color(valor);
-        //criando variavel para converter o valor
-        // salvo no banco para um valor boleano
-        bool favorito;
-        if (linha[Constantes.bancoFavorito].toString().contains("0")) {
-          favorito = false;
-        } else {
-          favorito = true;
-        }
-        tarefas.add(TarefaModelo(
-            id: linha[Constantes.bancoId],
-            titulo: linha[Constantes.bancoTitulo],
-            status: linha[Constantes.bancoStatus],
-            hora: linha[Constantes.bancoHora],
-            data: linha[Constantes.bancoData],
-            conteudo: linha[Constantes.bancoConteudo],
-            corTarefa: instanciaCor,
-            favorito: favorito));
-        for (int i = 0; i < tarefas.length; i++) {
-          if (tarefas[i].status == Constantes.statusConcluido) {
-            tarefas.removeAt(i);
-          }
-        }
-        quantidadeTarefas = tarefas.length;
-        //ordenando a lista dela data mais atual para a mais antiga
+        tarefas = value;
+        //ordenando a lista pela data
+        // mais recente para a mais antiga
         tarefas.sort((a, b) => DateFormat("dd/MM/yyyy", "pt_BR")
             .parse(b.data)
             .compareTo(DateFormat("dd/MM/yyyy", "pt_BR").parse(a.data)));
+        // pegando a quantidade de itens na lista
+        quantidadeTarefas = tarefas.length;
       });
-    }
+    });
   }
 
   realizarPesquisa(String pesquisa, List<TarefaModelo> tarefa) {
@@ -89,7 +64,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   Widget build(BuildContext context) {
     double alturaTela = MediaQuery.of(context).size.height;
     double larguraTela = MediaQuery.of(context).size.width;
-
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -136,8 +110,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 height: 40,
                 child: FloatingActionButton(
                   backgroundColor: Colors.white,
-                  onPressed: () {
-                  },
+                  onPressed: () {},
                   child: const Icon(
                     Icons.account_circle,
                     size: 30,
@@ -159,13 +132,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   scrollDirection: Axis.vertical,
                   child: Column(
                     children: [
-                      SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: Image.asset(
-                          'assets/imagens/logo_programa.png',
-                        ),
-                      ),
                       Container(
                         width: larguraTela,
                         margin: const EdgeInsets.symmetric(
@@ -243,7 +209,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                                                   30))),
                                               primary: Colors.redAccent),
                                           onPressed: () {
-                                            Navigator.pushNamed(context,
+                                            Navigator.pushReplacementNamed(
+                                                context,
                                                 Constantes.telaTarefaAdicao);
                                           },
                                           child: Column(
@@ -276,7 +243,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                                                   30))),
                                               primary: PaletaCores.corAmarela),
                                           onPressed: () {
-                                            Navigator.pushNamed(
+                                            Navigator.pushReplacementNamed(
                                                 context,
                                                 Constantes
                                                     .telaTarefaConcluidaProgresso,
@@ -313,7 +280,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                                                   30))),
                                               primary: Colors.green),
                                           onPressed: () {
-                                            Navigator.pushNamed(
+                                            Navigator.pushReplacementNamed(
                                                 context,
                                                 Constantes
                                                     .telaTarefaConcluidaProgresso,
