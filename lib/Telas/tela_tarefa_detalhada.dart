@@ -1,16 +1,15 @@
 import 'dart:async';
 
+import 'package:ciernote/Modelo/notificacao.dart';
 import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:ciernote/Uteis/banco_de_dados.dart';
+import 'package:ciernote/Uteis/notificacao_servico.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 
 import '../Uteis/constantes.dart';
 import '../Uteis/paleta_cores.dart';
 import '../Uteis/textos.dart';
-import 'package:intl/intl.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 class TarefaDetalhada extends StatefulWidget {
   const TarefaDetalhada({Key? key, required this.item}) : super(key: key);
@@ -24,69 +23,45 @@ class TarefaDetalhada extends StatefulWidget {
 class _TarefaDetalhadaState extends State<TarefaDetalhada> {
   final bancoDados = BancoDeDados.instance;
   late bool ativarFavorito;
+  late bool ativarNotificacao;
   late bool exibirBotoes = true;
-  var dadosTela = {};
-  late dynamic diferencaHora;
-  TimeOfDay? hora = const TimeOfDay(hour: 19, minute: 00);
-  DateTime data = DateTime(2022, 07, 02);
-
-  String conteudoNotificacao = "";
-  String tituloNotificacao = "";
-  int idNotificacao = 0;
-
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
     ativarFavorito = widget.item.favorito;
+    ativarNotificacao = widget.item.notificacaoAtiva;
     if (widget.item.status == Constantes.statusConcluido) {
       setState(() {
         exibirBotoes = false;
       });
     }
-    idNotificacao = widget.item.id;
-    tituloNotificacao = widget.item.titulo;
-    conteudoNotificacao = widget.item.conteudo;
-    iniciarNotificacao();
   }
 
-  iniciarNotificacao() {
-    var initializationSettingsAndroid =
-        const AndroidInitializationSettings("@mipmap/ic_launcher");
-    var initializationSettingsIOS = const IOSInitializationSettings(
-      requestSoundPermission: false,
-      requestBadgePermission: false,
-      requestAlertPermission: false,
-    );
-
-    // iniciando time zone para as notificacoes agendadas
-    tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('America/Detroit'));
-    var initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (payload) => SelectNotification());
-    if (!widget.item.hora.toString().contains(Constantes.horaSemPrazo)) {
-      formatarDataHora();
-    }
-  }
-
-  Future SelectNotification() async {
-    var dadosTela = {};
-    dadosTela[Constantes.telaParametroDetalhes] = widget.item;
-    Navigator.pushNamed(context, Constantes.telaTarefaDetalhada,
-        arguments: dadosTela);
-  }
-
-  void atualizarFavoritoBanco() async {
+  // metodo para atualizar os campos status,favorito e notificacao no banco de dados
+  void atualizarInfoBanco(String tipoAtualizacao) async {
+    String status = widget.item.status;
     setState(() {
-      if (ativarFavorito) {
-        ativarFavorito = false;
-      } else {
-        ativarFavorito = true;
+      if (tipoAtualizacao.contains(Constantes.bancoFavorito)) {
+        if (ativarFavorito) {
+          ativarFavorito = false;
+        } else {
+          ativarFavorito = true;
+        }
+      } else if (tipoAtualizacao.contains(Constantes.bancoStatus)) {
+        setState((){
+          status = Constantes.statusConcluido;
+          ativarNotificacao = false;
+          ativarFavorito = false;
+        });
+      } else if (tipoAtualizacao.contains(Constantes.bancoNotificacao)) {
+        if (ativarNotificacao) {
+          chamarCancelarNotificacao();
+          ativarNotificacao = false;
+        } else {
+          iniciarNotificacao();
+          ativarNotificacao = true;
+        }
       }
     });
     Map<String, dynamic> linha = {
@@ -96,24 +71,35 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
       BancoDeDados.columnTarefaData: widget.item.data,
       BancoDeDados.columnTarefaHora: widget.item.hora,
       BancoDeDados.columnTarefaCor: widget.item.corTarefa.toString(),
-      BancoDeDados.columnTarefaStatus: widget.item.status,
+      BancoDeDados.columnTarefaStatus: status,
       BancoDeDados.columnTarefaFavorito: ativarFavorito,
+      BancoDeDados.columnTarefaNotificacao: ativarNotificacao
     };
     await bancoDados.atualizar(linha);
   }
 
-  void atualizarStatusBanco() async {
-    Map<String, dynamic> linha = {
-      BancoDeDados.columnId: widget.item.id,
-      BancoDeDados.columnTarefaTitulo: widget.item.titulo,
-      BancoDeDados.columnTarefaConteudo: widget.item.conteudo,
-      BancoDeDados.columnTarefaData: widget.item.data,
-      BancoDeDados.columnTarefaHora: widget.item.hora,
-      BancoDeDados.columnTarefaCor: widget.item.corTarefa.toString(),
-      BancoDeDados.columnTarefaStatus: Constantes.statusConcluido,
-      BancoDeDados.columnTarefaFavorito: ativarFavorito,
-    };
-    await bancoDados.atualizar(linha);
+  chamarCancelarNotificacao() async {
+    await Provider.of<NotificacaoServico>(context, listen: false)
+        .cancelarNotificacao(widget.item.id);
+  }
+
+  iniciarNotificacao() {
+    String tipoNotificacao = Constantes.tipoNotiAgendada;
+    if (widget.item.hora.toString().contains(Constantes.horaSemPrazo)) {
+      tipoNotificacao = Constantes.tipoNotiPermanente;
+    }
+    var dados = {};
+    dados["teste"] = Constantes.telaTarefaDetalhada;
+    NotificacaoServico.chamarExibirNotificacao(
+        NotificacaoModelo(
+            id: widget.item.id,
+            titulo: widget.item.titulo,
+            corpoNotificacao: widget.item.conteudo,
+            data: widget.item.data,
+            hora: widget.item.hora,
+            payload: Constantes.telaTarefaDetalhada),
+        tipoNotificacao,
+        context);
   }
 
   //metodo para exibir alerta para excluir tarefa do banco de dados
@@ -129,11 +115,13 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                   child: const Text("Cancelar")),
               TextButton(
                   onPressed: () {
+                    chamarCancelarNotificacao();
                     //chamando metodo para excluir passando como parametro o id
                     bancoDados.excluir(widget.item.id);
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(Textos.sucessoExclusaoTarefa)));
-                    Navigator.pushReplacementNamed(context, Constantes.telaInicial);
+                    Navigator.pushReplacementNamed(
+                        context, Constantes.telaInicial);
                   },
                   child: const Text("Excluir"))
             ],
@@ -141,66 +129,10 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
         });
   }
 
-  // metodo responsavel por formatar a hora e a data para o padrao especificado
-  formatarDataHora() {
-    DateTime? converterHora;
-    converterHora = DateFormat("hh:mm").parse(widget.item.hora);
-    converterHora = DateFormat("hh:mm a").parse(widget.item.hora);
-    TimeOfDay horaFormatar =
-        TimeOfDay(hour: converterHora.hour, minute: converterHora.minute);
-    hora = horaFormatar;
-    data = DateFormat("dd/MM/yyyy", "pt_BR").parse(widget.item.data);
-  }
-
-  // metodo responsavel por criar o canal de notificacoes
-  criarCanalNotificacoes() {
-    var android = const AndroidNotificationDetails(
-      "channelId",
-      Constantes.canalNotificacaoPermanentes,
-      priority: Priority.max,
-      importance: Importance.high,
-      autoCancel: false,
-    );
-    var iOS = const IOSNotificationDetails();
-    var plataform = NotificationDetails(android: android, iOS: iOS);
-    return plataform;
-  }
-
   @override
   Widget build(BuildContext context) {
     double alturaTela = MediaQuery.of(context).size.height;
     double larguraTela = MediaQuery.of(context).size.width;
-
-    exibirNotificacao(String tipoNoti) async {
-      if (tipoNoti.contains(Constantes.tipoNotiAgendada)) {
-        // definindo que a variavel vai receber a DIFERENCA entre o horario atual do dispositivo
-        // e o horario salvo no banco de dados
-        Duration diferencaHora = tz.TZDateTime.now(tz.local).difference(
-            DateTime(
-                data.year, data.month, data.day, hora!.hour, hora!.minute));
-        // verificando se a variavel contem valor com sinal de negativo
-        if (diferencaHora.inSeconds.toString().contains("-")) {
-          diferencaHora = -(diferencaHora);
-        }
-        await flutterLocalNotificationsPlugin.zonedSchedule(
-            idNotificacao,
-            tituloNotificacao,
-            conteudoNotificacao,
-            tz.TZDateTime.now(tz.local)
-                .add(Duration(minutes: diferencaHora.inSeconds)),
-            criarCanalNotificacoes(),
-            androidAllowWhileIdle: true,
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime);
-      } else {
-        await flutterLocalNotificationsPlugin.show(
-          idNotificacao,
-          tituloNotificacao,
-          conteudoNotificacao,
-          criarCanalNotificacoes(),
-        );
-      }
-    }
 
     return WillPopScope(
         child: Scaffold(
@@ -223,10 +155,11 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                       //passando dados para a tela de edicao
                       var dadosTela = {};
                       dadosTela[Constantes.telaParametroDetalhes] = widget.item;
-                      Navigator.pushReplacementNamed(context, Constantes.telaTarefaEditar,
+                      Navigator.pushReplacementNamed(
+                          context, Constantes.telaTarefaEditar,
                           arguments: dadosTela);
                     } else if (value == Constantes.popUpMenuFavoritar) {
-                      atualizarFavoritoBanco();
+                      atualizarInfoBanco(Constantes.bancoFavorito);
                       if (ativarFavorito) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(Textos.sucessoAdicaoFavorito)));
@@ -235,14 +168,13 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                             content: Text(Textos.sucessoRemocaoFavorito)));
                       }
                     } else if (value == Constantes.popUpMenuNotificacao) {
-                      // verificando qual tipo de notificacao sera exibida com base se existe horario
-                      // para disparar a notificacao ou nao
-                      if (widget.item.hora
-                          .toString()
-                          .contains(Constantes.horaSemPrazo)) {
-                        exibirNotificacao(Constantes.tipoNotiPermanente);
+                      atualizarInfoBanco(Constantes.bancoNotificacao);
+                      if (ativarNotificacao) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(Textos.sucessoAtivarNotificacao)));
                       } else {
-                        exibirNotificacao(Constantes.tipoNotiAgendada);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(Textos.sucessoDesativarNotificacao)));
                       }
                     }
                   },
@@ -295,17 +227,28 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                         value: Constantes.popUpMenuNotificacao,
                         enabled: exibirBotoes,
                         child: Row(
-                          children: const [
+                          children: [
                             SizedBox(
-                              width: 40,
-                              height: 40,
-                              child: Icon(
-                                Icons.notification_add,
-                                size: 30,
-                                color: PaletaCores.corAzulCianoClaro,
-                              ),
-                            ),
-                            Text("Ativar Notificacao")
+                                width: 40,
+                                height: 40,
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    if (ativarNotificacao) {
+                                      return const Icon(
+                                        Icons.notification_add,
+                                        size: 30,
+                                        color: PaletaCores.corAzulCianoClaro,
+                                      );
+                                    } else {
+                                      return const Icon(
+                                        Icons.notification_add_outlined,
+                                        size: 30,
+                                        color: PaletaCores.corAzulCianoClaro,
+                                      );
+                                    }
+                                  },
+                                )),
+                            const Text("Ativar Notificacao")
                           ],
                         )),
                   ],
@@ -495,7 +438,8 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20)),
                                   onPressed: () {
-                                    atualizarStatusBanco();
+                                    chamarCancelarNotificacao();
+                                    atualizarInfoBanco(Constantes.bancoStatus);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                             content: Text(Textos

@@ -1,11 +1,12 @@
-import 'package:ciernote/Consulta.dart';
+import 'package:ciernote/Modelo/notificacao.dart';
+import 'package:ciernote/Uteis/consulta_banco_dados.dart';
 import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:ciernote/Uteis/constantes.dart';
+import 'package:ciernote/Uteis/notificacao_servico.dart';
 import 'package:ciernote/Uteis/paleta_cores.dart';
 import 'package:ciernote/Widget/listagem_principal_tarefa_widget.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../Uteis/banco_de_dados.dart';
+import 'package:provider/provider.dart';
 import '../Uteis/textos.dart';
 import 'package:intl/intl.dart';
 
@@ -17,26 +18,44 @@ class TelaPrincipal extends StatefulWidget {
 }
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
-  // referencia nossa classe single para gerenciar o banco de dados
-  final bancoDados = BancoDeDados.instance;
   List<TarefaModelo> tarefas = [];
-  List<TarefaModelo> tarefas2 = [];
   int quantidadeTarefas = 0;
   bool mudarVisualizacao = false;
   String nomeBotaoMudarVisualizacao = Textos.btnVerGrade;
   final TextEditingController _controllerPesquisa =
       TextEditingController(text: "");
 
-  @override
+  TimeOfDay? hora = const TimeOfDay(hour: 19, minute: 00);
+  DateTime data = DateTime(2022, 07, 02);
+
   @override
   void initState() {
     super.initState();
     consultarTarefas(); // chamando metodo
+    checarNotificacao();
   }
-// metodo responsavel por realizar as consultas ao banco de dados
+
+  checarNotificacao() async {
+    await Provider.of<NotificacaoServico>(context, listen: false)
+        .verificarNotificacoes();
+  }
+
+  realizarPesquisa(String pesquisa, List<TarefaModelo> tarefa) {
+    tarefa.where((element) => pesquisa.contains(element.titulo));
+
+    for (var element in tarefa) {
+      if (pesquisa.contains(element.titulo)) {
+        //print("Resultado: " + element.titulo);
+      }
+    }
+  }
+
+// metodo responsavel por pegar os itens
+// no banco de dados e exibir ao usuario ordenando pela data
   consultarTarefas() async {
-    // chamando metodo responsavel por pegar a lista de tarefas
-    await Consulta.consultarTarefasBanco(Constantes.statusConcluido).then((value) {
+    // chamando metodo responsavel por pegar os itens no banco de dados
+    await Consulta.consultarTarefasBanco(Constantes.statusConcluido)
+        .then((value) {
       setState(() {
         tarefas = value;
         //ordenando a lista pela data
@@ -48,16 +67,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         quantidadeTarefas = tarefas.length;
       });
     });
-  }
-
-  realizarPesquisa(String pesquisa, List<TarefaModelo> tarefa) {
-    tarefa.where((element) => pesquisa.contains(element.titulo));
-
-    for (var element in tarefa) {
-      if (pesquisa.contains(element.titulo)) {
-        //print("Resultado: " + element.titulo);
-      }
-    }
   }
 
   @override
@@ -142,10 +151,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                   BorderRadius.all(Radius.circular(10))),
                           child: TextField(
                             controller: _controllerPesquisa,
-                            onChanged: (_) {
-                              realizarPesquisa(
-                                  _controllerPesquisa.text, tarefas);
-                            },
                             onTap: () {
                               //mudando estado da variavel quando o usuario apertar dentro da barra de pesquisa
                               setState(() {
@@ -321,3 +326,5 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     );
   }
 }
+
+

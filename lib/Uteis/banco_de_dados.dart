@@ -16,6 +16,7 @@ class BancoDeDados {
   static const columnTarefaHora = Constantes.bancoHora;
   static const columnTarefaStatus = Constantes.bancoStatus;
   static const columnTarefaFavorito = Constantes.bancoFavorito;
+  static const columnTarefaNotificacao = Constantes.bancoNotificacao;
 
   // torna a clase singleton
   BancoDeDados._privateConstructor();
@@ -50,7 +51,8 @@ class BancoDeDados {
             $columnTarefaHora TEXT NOT NULL,
             $columnTarefaData TEXT NOT NULL,
             $columnTarefaStatus TEXT NOT NULL,
-            $columnTarefaFavorito BIT NOT NULL
+            $columnTarefaFavorito BIT NOT NULL,
+            $columnTarefaNotificacao BIT NOT NULL
           )
           ''');
   }
@@ -69,6 +71,11 @@ class BancoDeDados {
   Future<List<Map<String, dynamic>>> consultarLinhas() async {
     Database? db = await instance.database;
     return await db!.query(table);
+  }
+
+  Future<List<Map<String, dynamic>>> consultarPorID(String idDado) async {
+    Database? db = await instance.database;
+    return await db!.query("$table WHERE id = $idDado");
   }
 
   // metodo para atualizar os dados

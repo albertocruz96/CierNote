@@ -7,6 +7,8 @@ import 'package:ciernote/Telas/tela_tarefa_detalhada.dart';
 import 'package:flutter/material.dart';
 
 class Rotas {
+  static GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Recebe os parâmetros na chamada do Navigator.pushNamed
     final args = settings.arguments;

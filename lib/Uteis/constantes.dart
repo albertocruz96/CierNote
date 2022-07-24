@@ -7,6 +7,7 @@ class Constantes {
       "/telaTarefaConcluidaProgresso";
   static const String telaParametroConcluidoProgresso =
       "tarefaConcluidaProgresso";
+  static const String telaSplashScreen = "telaSplash";
   static const String telaExibirConcluido = "telaConcluida";
   static const String telaExibirProgresso = "telaProgresso";
   static const String telaParametroDetalhes = "detalhesTarefa";
@@ -22,7 +23,6 @@ class Constantes {
   static const String canalNotificacaoPadrao = "Notificacoes Padrão";
   static const String canalNotificacaoPermanentes = "Notificacoes Permanentes";
 
-
   static const String tipoNotiAgendada = "agendada";
   static const String tipoNotiPermanente = "permanente";
 
@@ -36,4 +36,5 @@ class Constantes {
   static const bancoHora = 'hora';
   static const bancoStatus = 'status';
   static const bancoFavorito = 'favorito';
+  static const bancoNotificacao = 'notificacao';
 }

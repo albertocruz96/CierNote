@@ -35,9 +35,13 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
 
   //metodo para formatar a hora para o formato 12 horas
   formatarHora() {
+    // pegando o formato sedejado
     var formatoHora = DateFormat('HH:mm');
+    // atribuindo a variavel de hora o formato e adicionando 30 minutos ao horario
     var horaParse = formatoHora.parse('${hora!.hour}:${hora!.minute}');
+    // criando o formato de saida
     var saidaHoraFormatada = DateFormat('hh:mm a');
+    //definindo que a variavel vai receber o formato de saida
     horaFormatada = saidaHoraFormatada.format(horaParse);
   }
 
@@ -73,6 +77,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
       BancoDeDados.columnTarefaCor: corSelecionada.toString(),
       BancoDeDados.columnTarefaStatus: Constantes.statusEmProgresso,
       BancoDeDados.columnTarefaFavorito: false,
+      BancoDeDados.columnTarefaNotificacao: false,
     };
     await bancoDados.inserir(linha);
   }
@@ -86,7 +91,8 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
             title: Text(Textos.txtTituloAlertaSair),
             actions: [
               TextButton(
-                  onPressed: () => Navigator.popAndPushNamed(context, Constantes.telaInicial),
+                  onPressed: () => Navigator.popAndPushNamed(
+                      context, Constantes.telaInicial),
                   child: const Text("Cancelar")),
               TextButton(
                   onPressed: () =>
@@ -185,7 +191,8 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                         inserirDados();
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(Textos.sucessoAdicaoTarefa)));
-                        Navigator.pushReplacementNamed(context, Constantes.telaInicial);
+                        Navigator.pushReplacementNamed(
+                            context, Constantes.telaInicial);
                       }
                     }
                   },
@@ -301,8 +308,9 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                                       child: child!);
                                                 },
                                                 context: context,
-                                                initialDate: data
-                                                    .add(const Duration(minutes: 30)),
+                                                initialDate: data.add(
+                                                    const Duration(
+                                                        minutes: 30)),
                                                 firstDate: DateTime(2000),
                                                 lastDate: DateTime(2100));
 

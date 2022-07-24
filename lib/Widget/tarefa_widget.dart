@@ -80,7 +80,6 @@ class _TarefaWidgetState extends State<TarefaWidget> {
                               children: [
                                 const Icon(Icons.calendar_month,
                                     color: Colors.white, size: 20),
-                                const SizedBox(width: 5),
                                 Text(
                                   widget.item.data,
                                   textAlign: TextAlign.justify,
@@ -92,7 +91,7 @@ class _TarefaWidgetState extends State<TarefaWidget> {
                               ],
                             ),
                             SizedBox(
-                              width: 30,
+                              width: 25,
                               child: LayoutBuilder(
                                 builder: (context, constraints) {
                                   if (widget.item.favorito) {
@@ -110,7 +109,28 @@ class _TarefaWidgetState extends State<TarefaWidget> {
                                   }
                                 },
                               ),
-                            )
+                            ),
+                            SizedBox(
+                              width: 25,
+                              child: LayoutBuilder(
+                                builder: (context, constraints) {
+                                  if (widget.item.notificacaoAtiva) {
+                                    return const Icon(
+                                      Icons.notification_add,
+                                      size: 20,
+                                      color: Colors.white,
+                                    );
+                                  } else {
+                                    return const Icon(
+                                      Icons.notification_add_outlined,
+                                      size: 20,
+                                      color: Colors.white,
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+
                           ],
                         ),
                       ],

@@ -1,11 +1,12 @@
 class TarefaModelo {
   TarefaModelo(
-      {required this.titulo,
-      required this.id,
+      {required this.id,
+      required this.titulo,
       required this.conteudo,
       required this.data,
       required this.hora,
-      required this.favorito,
+      this.favorito = false,
+      this.notificacaoAtiva = false,
       required this.status,
       required this.corTarefa});
 
@@ -17,4 +18,5 @@ class TarefaModelo {
   dynamic status;
   dynamic corTarefa;
   bool favorito;
+  bool notificacaoAtiva;
 }

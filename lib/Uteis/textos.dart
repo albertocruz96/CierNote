@@ -41,12 +41,14 @@ class Textos {
 
   // String tela TAREFA CONCLUIDA
   static String txtTelaTarefaConcluida = "Tarefas Concluidas";
+
   // String tela TAREFA PROGRESSO
   static String txtTelaTarefaProgresso = "Tarefas Em Progresso";
 
   // Strings GERAIS
 
-  static String txtLegListaVaziaDataSelecionada = "Sem tarefas na data selecionada";
+  static String txtLegListaVaziaDataSelecionada =
+      "Sem tarefas na data selecionada";
   static String txtLegListaVazia = "Sem tarefas a serem realizadas";
   static String txtData = "Data";
   static String txtHora = "Hora";
@@ -61,6 +63,9 @@ class Textos {
   // String de retorno ao usuario ERRO e SUCESSO
   static String sucessoAdicaoFavorito = "Tarefa adionada aos favoritos";
   static String sucessoRemocaoFavorito = "Tarefa removida dos favoritos";
+  static String sucessoAtivarNotificacao = "Notificacao da tarefa ativada";
+  static String sucessoDesativarNotificacao =
+      "Notificacao da tarefa desativada";
   static String sucessoAdicaoTarefa = "Sucesso ao criar Tarefa";
   static String sucessoConcluidoTarefa = "Tarefa marcada como conclúida.";
   static String sucessoEditarTarefa = "Sucesso ao Editar Tarefa";

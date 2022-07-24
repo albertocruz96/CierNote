@@ -3,8 +3,7 @@ import 'package:ciernote/Uteis/paleta_cores.dart';
 import 'package:ciernote/Widget/tarefa_widget.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
-import '../Consulta.dart';
-import '../Uteis/banco_de_dados.dart';
+import '../Uteis/consulta_banco_dados.dart';
 import 'package:intl/intl.dart';
 import '../Uteis/constantes.dart';
 import '../Uteis/textos.dart';
@@ -28,8 +27,6 @@ class _TelaTarefaConcluidaProgressoState
   String nomeTela = "";
   String tipoConsulta = "";
 
-  // referencia a classepara gerenciar o banco de dados
-  final bancoDados = BancoDeDados.instance;
 
   @override
   void initState() {
@@ -74,7 +71,8 @@ class _TelaTarefaConcluidaProgressoState
 
   pegarDataAntiga() {
     // metodo responsavel por ordenar a lista
-    //da data mais antigo para a mais recente e definir valor para a variavel
+    //da data mais antigo para a mais recente e
+    // definir valor para a variavel
     listaTarefas.sort((a, b) => DateFormat("dd/MM/yyyy", "pt_BR")
         .parse(a.data)
         .compareTo(DateFormat("dd/MM/yyyy", "pt_BR").parse(b.data)));
