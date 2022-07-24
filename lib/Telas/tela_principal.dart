@@ -1,4 +1,3 @@
-import 'package:ciernote/Modelo/notificacao.dart';
 import 'package:ciernote/Uteis/consulta_banco_dados.dart';
 import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:ciernote/Uteis/constantes.dart';
@@ -9,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Uteis/textos.dart';
 import 'package:intl/intl.dart';
+
+import '../Widget/pesquisa_tarefas_widget.dart';
 
 class TelaPrincipal extends StatefulWidget {
   const TelaPrincipal({Key? key}) : super(key: key);
@@ -119,7 +120,9 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 height: 40,
                 child: FloatingActionButton(
                   backgroundColor: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    //showSearch(context: context, delegate: Pesquisa());
+                  },
                   child: const Icon(
                     Icons.account_circle,
                     size: 30,
@@ -151,12 +154,12 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                   BorderRadius.all(Radius.circular(10))),
                           child: TextField(
                             controller: _controllerPesquisa,
+                            readOnly: true,
                             onTap: () {
+                              showSearch(
+                                  context: context,
+                                  delegate: PesquisaTarefasWidget(tarefas: tarefas));
                               //mudando estado da variavel quando o usuario apertar dentro da barra de pesquisa
-                              setState(() {
-                                mudarVisualizacao = false;
-                                nomeBotaoMudarVisualizacao = Textos.btnVerGrade;
-                              });
                             },
                             decoration: InputDecoration(
                                 prefixIcon:
