@@ -2,6 +2,7 @@ import 'package:ciernote/Widget/tarefa_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../Modelo/tarefa_modelo.dart';
+import '../Uteis/paleta_cores.dart';
 import '../Uteis/textos.dart';
 
 class ListagemTarefasWidget extends StatefulWidget {
@@ -29,10 +30,11 @@ class _ListagemTarefasWidgetState extends State<ListagemTarefasWidget> {
       child: Container(
           color: Colors.white,
           child: Card(
+            color: PaletaCores.corCinzaClaro,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30),
-                    topLeft: Radius.circular(30))),
+                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(20))),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(
@@ -40,7 +42,7 @@ class _ListagemTarefasWidgetState extends State<ListagemTarefasWidget> {
                   Container(
                     height: 30,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0, vertical: 0.0),
+                        horizontal: 10.0, vertical: 1.0),
                     width: larguraTela,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,7 +53,7 @@ class _ListagemTarefasWidgetState extends State<ListagemTarefasWidget> {
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(
-                          height: 25,
+                          height: 30,
                           width: 150,
                           child: ElevatedButton(
                             style:
@@ -80,6 +82,9 @@ class _ListagemTarefasWidgetState extends State<ListagemTarefasWidget> {
                         )
                       ],
                     ),
+                  ),
+                 const SizedBox(
+                    height: 10,
                   ),
                   SizedBox(
                       width: larguraTela,

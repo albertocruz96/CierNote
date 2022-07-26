@@ -1,3 +1,4 @@
+import 'package:ciernote/Uteis/paleta_cores.dart';
 import 'package:flutter/material.dart';
 
 import '../Modelo/tarefa_modelo.dart';
@@ -34,7 +35,7 @@ class PesquisaTarefasWidget extends SearchDelegate {
           onPressed: () {
             close(context, null);
           },
-          icon: const Icon(Icons.clear))
+          icon: const Icon(Icons.clear,color: PaletaCores.corAzulCianoClaro,size: 30,))
     ];
   }
 
@@ -44,7 +45,7 @@ class PesquisaTarefasWidget extends SearchDelegate {
         onPressed: () {
           close(context, null);
         },
-        icon: const Icon(Icons.arrow_back));
+        icon: const Icon(Icons.arrow_back,color: PaletaCores.corAzulCianoClaro,size: 30,));
   }
 
   @override
@@ -86,17 +87,17 @@ class PesquisaTarefasWidget extends SearchDelegate {
                     },
                     cells: [
                       DataCell(SizedBox(
-                        height: 30,
+                        height: 20,
                         width: 50,
                         child: Text(item.titulo),
                       )),
                       DataCell(SizedBox(
-                        height: 30,
+                        height: 20,
                         width: 100,
                         child: Text(item.data),
                       )),
                       DataCell(SizedBox(
-                        height: 40,
+                        height: 20,
                         width: 90,
                         child: Text(item.hora),
                       ))

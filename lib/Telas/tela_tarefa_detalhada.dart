@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:ciernote/Modelo/notificacao.dart';
+import 'package:ciernote/Modelo/notificacao_modelo.dart';
 import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:ciernote/Uteis/banco_de_dados.dart';
 import 'package:ciernote/Uteis/notificacao_servico.dart';

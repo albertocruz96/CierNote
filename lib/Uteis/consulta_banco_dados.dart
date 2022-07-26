@@ -63,43 +63,4 @@ class Consulta {
     }
     return lista;
   }
-
-  //metodo para realizar a consulta no banco de dados
-  static Future<List<TarefaModelo>> consultarTarefasBancoID(
-      String idDado) async {
-    final registros = await bancoDados.consultarPorID(idDado);
-    List<TarefaModelo> lista = [];
-    for (var linha in registros) {
-      dynamic cor = linha[Constantes.bancoCor];
-      // pegando valor e convertendo para o formato para definir a cor
-      String corString = cor.toString().split('(0x')[1].split(')')[0];
-      int valor = int.parse(corString, radix: 16);
-      Color instanciaCor = Color(valor);
-      //criando variavel para converter o valor
-      // salvo no banco para um valor boleano
-      bool favorito;
-      if (linha[Constantes.bancoFavorito].toString().contains("0")) {
-        favorito = false;
-      } else {
-        favorito = true;
-      }
-      bool notificacao;
-      if (linha[Constantes.bancoNotificacao].toString().contains("0")) {
-        notificacao = false;
-      } else {
-        notificacao = true;
-      }
-      lista.add(TarefaModelo(
-          id: linha[Constantes.bancoId],
-          titulo: linha[Constantes.bancoTitulo],
-          status: linha[Constantes.bancoStatus],
-          hora: linha[Constantes.bancoHora],
-          data: linha[Constantes.bancoData],
-          conteudo: linha[Constantes.bancoConteudo],
-          corTarefa: instanciaCor,
-          favorito: favorito,
-          notificacaoAtiva: notificacao));
-    }
-    return lista;
-  }
 }

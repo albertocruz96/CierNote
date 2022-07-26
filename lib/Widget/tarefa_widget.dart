@@ -116,13 +116,13 @@ class _TarefaWidgetState extends State<TarefaWidget> {
                                 builder: (context, constraints) {
                                   if (widget.item.notificacaoAtiva) {
                                     return const Icon(
-                                      Icons.notification_add,
+                                      Icons.notifications_rounded,
                                       size: 20,
                                       color: Colors.white,
                                     );
                                   } else {
                                     return const Icon(
-                                      Icons.notification_add_outlined,
+                                      Icons.notifications_none_outlined,
                                       size: 20,
                                       color: Colors.white,
                                     );

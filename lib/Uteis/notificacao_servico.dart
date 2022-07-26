@@ -1,7 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Modelo/notificacao.dart';
+import '../Modelo/notificacao_modelo.dart';
 import '../Uteis/constantes.dart';
 
 import 'package:timezone/timezone.dart' as tz;
@@ -96,13 +96,15 @@ class NotificacaoServico {
       formatarDataHora(notificacaoModelo);
     }
     // variavel com os detalhes da notificacao
+    // ON GOING  verdadeiro para quando a notificacao ser ativada ela
+    // ela nao poder ser removida deslizando
+
     var androidDetalhes = const AndroidNotificationDetails(
       "lembrete_notificacao",
-      Constantes.canalNotificacaoPermanentes,
+      Constantes.canalNotificacaoPadrao,
       priority: Priority.max,
       importance: Importance.high,
       autoCancel: false,
-      // especificando que a notificacao sera do tipo em andamento
       ongoing: true,
       onlyAlertOnce: true,
       enableVibration: true,

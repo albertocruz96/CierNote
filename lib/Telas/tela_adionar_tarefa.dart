@@ -35,7 +35,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
 
   //metodo para formatar a hora para o formato 12 horas
   formatarHora() {
-    // pegando o formato sedejado
+    // pegando o formato desejado
     var formatoHora = DateFormat('HH:mm');
     // atribuindo a variavel de hora o formato e adicionando 30 minutos ao horario
     var horaParse = formatoHora.parse('${hora!.hour}:${hora!.minute}');
@@ -51,13 +51,14 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
     formatarHora();
   }
 
+
   // lista com as cores para o usuario selecionar
   final List<SeletorCorModelo> itensCores = [
     SeletorCorModelo(cor: PaletaCores.corMarsala),
     SeletorCorModelo(cor: PaletaCores.corLaranja),
     SeletorCorModelo(cor: PaletaCores.corMarsalaEscuro),
     SeletorCorModelo(cor: PaletaCores.corRosa),
-    SeletorCorModelo(cor: PaletaCores.corCinzaClaro),
+    SeletorCorModelo(cor: PaletaCores.corAmareloDesaturado),
     SeletorCorModelo(cor: PaletaCores.corVermelho),
     SeletorCorModelo(cor: PaletaCores.corAmarela),
     SeletorCorModelo(cor: PaletaCores.corVerde),

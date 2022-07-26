@@ -5,7 +5,8 @@ class PaletaCores{
   static const Color corAmarela = Color(0xffFFCD27);
   static const Color corLaranja = Color(0xffff7b00);
   static const Color corRosa = Color(0xffe22173);
-  static const Color corCinzaClaro = Color(0xffc0c0c0);
+  static const Color corCinzaMenosClaro = Color(0xffc0c0c0);
+  static const Color corCinzaClaro = Color(0xfff0f0f0);
   static const Color corAmareloDesaturado = Color(0xfff2e287);
   static const Color corAzulCianoClaro = Color(0xff01a5b1);
   static const Color corMagenta = Color(0xff761d8e);

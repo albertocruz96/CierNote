@@ -10,6 +10,7 @@ class Textos {
   static String btnVerTodasTarefa = "Ver tudo";
   static String btnSalvar = "Salvar";
   static String btnAtualizar = "Atualizar";
+  static String btnFavoritos = "Favoritos";
   static String btnVerLista = "Ver em Lista";
   static String btnVerGrade = "Ver em Grade";
 
@@ -56,7 +57,7 @@ class Textos {
   static String txtExcluir = "Excluir";
   static String txtLegendaData = "Selecione uma data para filtrar as tarefas";
 
-  // String ALert Dialog
+  // String Alert Dialog
   static String txtTituloAlertaSair = "Deseja sair sem salvar ? ";
   static String txtTituloAlertaExclusao = "Deseja excluir esta tarefa ? ";
 

@@ -1,31 +1,31 @@
 class Constantes {
+
+  // constantes para a rota das telas
   static const String telaInicial = "/telaInicial";
   static const String telaTarefaAdicao = "/telaTarefaAdicao";
   static const String telaTarefaDetalhada = "/telaTarefaDetalhada";
   static const String telaTarefaEditar = "/telaTarefaEdicao";
   static const String telaTarefaConcluidaProgresso =
       "/telaTarefaConcluidaProgresso";
-  static const String telaParametroConcluidoProgresso =
-      "tarefaConcluidaProgresso";
-  static const String telaSplashScreen = "telaSplash";
   static const String telaExibirConcluido = "telaConcluida";
   static const String telaExibirProgresso = "telaProgresso";
   static const String telaParametroDetalhes = "detalhesTarefa";
-  static String horaSemPrazo = "Sem Horário";
 
+  static String horaSemPrazo = "Sem Horário";
+  // constantes para o status da tarefa
   static const String statusEmProgresso = "Em Progresso";
   static const String statusConcluido = "Concluido";
-
+  // constantes usadas nos pop ups na tela onde fica os detalhes da tarefa
   static const String popUpMenuEditar = "editar";
   static const String popUpMenuFavoritar = "favorito";
   static const String popUpMenuNotificacao = "notificacao";
 
-  static const String canalNotificacaoPadrao = "Notificacoes Padrão";
-  static const String canalNotificacaoPermanentes = "Notificacoes Permanentes";
-
+  // constantes para a notificacao
+  static const String canalNotificacaoPadrao = "Notificações Padrão";
   static const String tipoNotiAgendada = "agendada";
   static const String tipoNotiPermanente = "permanente";
 
+  // constantes para o banco de dados sql lite
   static const nomeBanco = "tarefasBanco.db";
   static const nomeTabela = 'tarefas';
   static const bancoId = 'id';

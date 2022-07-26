@@ -73,11 +73,6 @@ class BancoDeDados {
     return await db!.query(table);
   }
 
-  Future<List<Map<String, dynamic>>> consultarPorID(String idDado) async {
-    Database? db = await instance.database;
-    return await db!.query("$table WHERE id = $idDado");
-  }
-
   // metodo para atualizar os dados
   // a coluna id no mapa está definida. Os outros
   // valores das colunas serão usados para atualizar a linha.

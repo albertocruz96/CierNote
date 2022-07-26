@@ -68,11 +68,9 @@ class _TelaTarefaConcluidaProgressoState
     //pegando o tamanho  da lista
     quantidadeTarefas = listaAuxiliar.length;
   }
-
+  // metodo responsavel por ordenar a lista da data mais antigo para a mais recente e definir valor para a variavel
   pegarDataAntiga() {
-    // metodo responsavel por ordenar a lista
-    //da data mais antigo para a mais recente e
-    // definir valor para a variavel
+
     listaTarefas.sort((a, b) => DateFormat("dd/MM/yyyy", "pt_BR")
         .parse(a.data)
         .compareTo(DateFormat("dd/MM/yyyy", "pt_BR").parse(b.data)));

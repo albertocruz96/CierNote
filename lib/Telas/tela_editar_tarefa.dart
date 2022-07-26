@@ -45,7 +45,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
     SeletorCorModelo(cor: PaletaCores.corLaranja),
     SeletorCorModelo(cor: PaletaCores.corMarsalaEscuro),
     SeletorCorModelo(cor: PaletaCores.corRosa),
-    SeletorCorModelo(cor: PaletaCores.corCinzaClaro),
+    SeletorCorModelo(cor: PaletaCores.corAmareloDesaturado),
     SeletorCorModelo(cor: PaletaCores.corVermelho),
     SeletorCorModelo(cor: PaletaCores.corAmarela),
     SeletorCorModelo(cor: PaletaCores.corVerde),
@@ -59,7 +59,6 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
     _controllerTitulo.text = widget.item.titulo;
     _controllerConteudo.text = widget.item.conteudo;
     status = widget.item.status;
-    print(status);
     if (status.contains(Constantes.statusEmProgresso)) {
       setState(() {
         exibirMudarStatus = false;
@@ -69,7 +68,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
     data = DateFormat("dd/MM/yyyy", "pt_BR").parse(widget.item.data);
     DateTime? converterHora;
     //verificando se o horario gravado no banco contem determinado texto para exibir
-    // ou nao campo
+    // ou nao o campo
     if (widget.item.hora.toString().contains(Constantes.horaSemPrazo)) {
       setState(() {
         exibirDefinirHora = true;
@@ -97,7 +96,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
     }
   }
 
-  //metodo para formatar a hora para o formato 12 horas
+  //metodo para formatar a hora para o formato de 12 horas
   formatarHora(dynamic hora) {
     var formatoHora = DateFormat('hh:mm');
     var horaParse = formatoHora.parse('${hora!.hour}:${hora!.minute}');

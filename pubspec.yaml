@@ -34,8 +34,9 @@ dependencies:
   # sql lite para banco de dados local
   sqflite: ^2.0.3
   path_provider: ^2.0.11
+  path_provider_windows: ^2.1.0
   provider:
-  # necessario para o data time horizontal
+# necessario para o data time horizontal
   date_picker_timeline:
 # neessario para as notificacaoes
   workmanager: ^0.5.0

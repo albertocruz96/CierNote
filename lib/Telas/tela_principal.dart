@@ -22,10 +22,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   List<TarefaModelo> tarefas = [];
   int quantidadeTarefas = 0;
   bool mudarVisualizacao = false;
+  String nomeUsuario = "Jhonatan";
   String nomeBotaoMudarVisualizacao = Textos.btnVerGrade;
-  final TextEditingController _controllerPesquisa =
-      TextEditingController(text: "");
-
   TimeOfDay? hora = const TimeOfDay(hour: 19, minute: 00);
   DateTime data = DateTime(2022, 07, 02);
 
@@ -36,19 +34,10 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     checarNotificacao();
   }
 
+  // metodo responsavel por verificar as notificacoes
   checarNotificacao() async {
     await Provider.of<NotificacaoServico>(context, listen: false)
         .verificarNotificacoes();
-  }
-
-  realizarPesquisa(String pesquisa, List<TarefaModelo> tarefa) {
-    tarefa.where((element) => pesquisa.contains(element.titulo));
-
-    for (var element in tarefa) {
-      if (pesquisa.contains(element.titulo)) {
-        //print("Resultado: " + element.titulo);
-      }
-    }
   }
 
 // metodo responsavel por pegar os itens
@@ -60,7 +49,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
       setState(() {
         tarefas = value;
         //ordenando a lista pela data
-        // mais recente para a mais antiga
+        // da mais recente para a mais antiga
         tarefas.sort((a, b) => DateFormat("dd/MM/yyyy", "pt_BR")
             .parse(b.data)
             .compareTo(DateFormat("dd/MM/yyyy", "pt_BR").parse(a.data)));
@@ -83,21 +72,34 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 ListTile(
                   title: Text(Textos.txtLegMenuLateral,
-                      style: const TextStyle(fontSize: 20)),
+                      style: const TextStyle(fontSize: 25)),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.lock, color: Colors.black),
-                  title: Text(Textos.btnNotasOcultas),
+                  leading: const Icon(Icons.lock,
+                      size: 25, color: PaletaCores.corAzulCianoClaro),
+                  title: Text(Textos.btnNotasOcultas,style: const TextStyle(
+                    fontSize: 18
+                  )),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const Icon(Icons.favorite,
+                      size: 25, color: PaletaCores.corAzulCianoClaro),
+                  title: Text(Textos.btnFavoritos,style: const TextStyle(
+                      fontSize: 18
+                  )),
                   onTap: () {},
                 ),
                 ListTile(
                   leading: const Icon(Icons.restore_from_trash_sharp,
-                      color: Colors.black),
-                  title: Text(Textos.btnLixeira),
+                      size: 25, color: PaletaCores.corAzulCianoClaro),
+                  title: Text(Textos.btnLixeira,style: const TextStyle(
+                      fontSize: 18
+                  )),
                   onTap: () {},
                 ),
               ],
@@ -149,21 +151,25 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                         margin: const EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 10.0),
                         child: Card(
+                          elevation: 20,
                           shape: const RoundedRectangleBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
+                                  BorderRadius.all(Radius.circular(15))),
                           child: TextField(
-                            controller: _controllerPesquisa,
                             readOnly: true,
                             onTap: () {
+                              // chamando metodo resposavel por exibir a barra de pesquisa personalizada
                               showSearch(
                                   context: context,
-                                  delegate: PesquisaTarefasWidget(tarefas: tarefas));
-                              //mudando estado da variavel quando o usuario apertar dentro da barra de pesquisa
+                                  delegate:
+                                      PesquisaTarefasWidget(tarefas: tarefas));
                             },
                             decoration: InputDecoration(
-                                prefixIcon:
-                                    const Icon(Icons.search_rounded, size: 30),
+                                prefixIcon: const Icon(
+                                  Icons.search_rounded,
+                                  size: 30,
+                                  color: PaletaCores.corAzulCianoClaro,
+                                ),
                                 prefixIconColor: PaletaCores.corCinzaClaro,
                                 hintText: Textos.txtLegBarraBusca,
                                 focusedBorder: InputBorder.none,
@@ -176,152 +182,159 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       SizedBox(
                           width: larguraTela,
                           height: 300,
-                          child: Stack(
+                          child: Column(
                             children: [
-                              Positioned(
-                                child: SizedBox(
-                                  width: larguraTela,
-                                  height: 100,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        Textos.txtBoasVindas,
-                                        style: const TextStyle(
-                                            color: PaletaCores.corCinzaClaro,
-                                            fontSize: 20),
-                                      ),
-                                      Text(
-                                        "Você tem $quantidadeTarefas tarefas a serem realizadas",
-                                        style: const TextStyle(fontSize: 20),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                              SizedBox(
+                                width: larguraTela,
+                                height: 70,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SizedBox(
-                                      width: 110,
-                                      height: 110,
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  30))),
-                                              primary: Colors.redAccent),
-                                          onPressed: () {
-                                            Navigator.pushReplacementNamed(
-                                                context,
-                                                Constantes.telaTarefaAdicao);
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(Icons.list_alt,
-                                                  size: 30),
-                                              Text(
-                                                Textos.btnCriarTarefa,
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                    fontSize: 17,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )
-                                            ],
-                                          )),
+                                    Text(
+                                      "${Textos.txtBoasVindas} $nomeUsuario",
+                                      style: const TextStyle(
+                                          color: PaletaCores.corCinzaMenosClaro,
+                                          fontSize: 20),
                                     ),
-                                    SizedBox(
-                                      width: 110,
-                                      height: 110,
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  30))),
-                                              primary: PaletaCores.corAmarela),
-                                          onPressed: () {
-                                            Navigator.pushReplacementNamed(
-                                                context,
-                                                Constantes
-                                                    .telaTarefaConcluidaProgresso,
-                                                arguments: Constantes
-                                                    .telaExibirProgresso);
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(Icons.timer_outlined,
-                                                  size: 30),
-                                              Text(
-                                                Textos.btnEmProgresso,
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                    fontSize: 17,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )
-                                            ],
-                                          )),
+                                    Text(
+                                      "Você tem $quantidadeTarefas tarefas a serem realizadas",
+                                      style: const TextStyle(fontSize: 20),
                                     ),
-                                    SizedBox(
-                                      width: 110,
-                                      height: 110,
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  30))),
-                                              primary: Colors.green),
-                                          onPressed: () {
-                                            Navigator.pushReplacementNamed(
-                                                context,
-                                                Constantes
-                                                    .telaTarefaConcluidaProgresso,
-                                                arguments: Constantes
-                                                    .telaExibirConcluido);
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(Icons.done_outline,
-                                                  size: 30),
-                                              Text(
-                                                Textos.btnConcluido,
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                    fontSize: 17,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )
-                                            ],
-                                          )),
-                                    )
                                   ],
                                 ),
-                              )
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  SizedBox(
+                                    width: 120,
+                                    height: 140,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            shadowColor: Colors.red,
+                                            elevation: 10,
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(30))),
+                                            primary: Colors.white),
+                                        onPressed: () {
+                                          Navigator.pushReplacementNamed(
+                                              context,
+                                              Constantes.telaTarefaAdicao);
+                                        },
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            const Icon(
+                                              Icons.list_alt,
+                                              size: 40,
+                                              color: Colors.black,
+                                            ),
+                                            Text(
+                                              Textos.btnCriarTarefa,
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    width: 120,
+                                    height: 140,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            elevation: 10,
+                                            shadowColor: Colors.yellow,
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(30))),
+                                            primary: Colors.white),
+                                        onPressed: () {
+                                          Navigator.pushReplacementNamed(
+                                              context,
+                                              Constantes
+                                                  .telaTarefaConcluidaProgresso,
+                                              arguments: Constantes
+                                                  .telaExibirProgresso);
+                                        },
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            const Icon(
+                                              Icons.access_time,
+                                              size: 40,
+                                              color: Colors.black,
+                                            ),
+                                            Text(
+                                              Textos.btnEmProgresso,
+                                              maxLines: 2,
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    width: 120,
+                                    height: 140,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            elevation: 10,
+                                            shadowColor: PaletaCores.corVerde,
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(30))),
+                                            primary: Colors.white),
+                                        onPressed: () {
+                                          Navigator.pushReplacementNamed(
+                                              context,
+                                              Constantes
+                                                  .telaTarefaConcluidaProgresso,
+                                              arguments: Constantes
+                                                  .telaExibirConcluido);
+                                        },
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            const Icon(
+                                              Icons.done_outlined,
+                                              size: 40,
+                                              color: Colors.black,
+                                            ),
+                                            Text(
+                                              Textos.btnConcluido,
+                                              maxLines: 2,
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        )),
+                                  ),
+                                ],
+                              ),
                             ],
                           )),
                     ],
                   ),
                 )),
           ),
-          bottomSheet: GestureDetector(
+          bottomNavigationBar: GestureDetector(
               onTap: () {
                 FocusScope.of(context).requestFocus(FocusNode());
               },
@@ -329,5 +342,3 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     );
   }
 }
-
-
