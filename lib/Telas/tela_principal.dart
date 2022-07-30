@@ -1,11 +1,11 @@
 import 'package:ciernote/Uteis/consulta_banco_dados.dart';
 import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:ciernote/Uteis/constantes.dart';
-import 'package:ciernote/Uteis/notificacao_servico.dart';
 import 'package:ciernote/Uteis/paleta_cores.dart';
 import 'package:ciernote/Widget/listagem_tela_principal_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../Uteis/Servicos/notificacao_servico.dart';
 import '../Uteis/textos.dart';
 import 'package:intl/intl.dart';
 
@@ -18,7 +18,7 @@ class TelaPrincipal extends StatefulWidget {
   State<TelaPrincipal> createState() => _TelaPrincipalState();
 }
 
-class _TelaPrincipalState extends State<TelaPrincipal> with WidgetsBindingObserver{
+class _TelaPrincipalState extends State<TelaPrincipal> {
   List<TarefaModelo> tarefas = [];
   int quantidadeTarefas = 0;
   bool exibirOpcaoCriarTarefa = true;
@@ -29,7 +29,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> with WidgetsBindingObserv
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     consultarTarefas(); // chamando metodo
     checarNotificacao();
   }
@@ -40,34 +39,17 @@ class _TelaPrincipalState extends State<TelaPrincipal> with WidgetsBindingObserv
         .verificarNotificacoes();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state){
-    super.didChangeAppLifecycleState(state);
-    if(state == AppLifecycleState.resumed){
-      print("retomou");
-    }else if(state == AppLifecycleState.paused){
-      print("fdfsd");
-    }else if(state == AppLifecycleState.inactive){
-      print("aaa");
-    }else if(state == AppLifecycleState.detached){
-      print("carai");
-    }
-  }
- @override
- void dispose(){
-    super.dispose();
- }
-
 // metodo responsavel por pegar os itens
 // no banco de dados e exibir ao usuario ordenando pela data
   consultarTarefas() async {
     // chamando metodo responsavel por pegar os itens no banco de dados
-    await Consulta.consultarTarefasBanco()
-        .then((value) {
+    await Consulta.consultarTarefasBanco().then((value) {
       setState(() {
-
         tarefas = value;
-        value.removeWhere((element) => element.status == Constantes.statusConcluido);
+        // removendo itens da lista que corresponde aos criterios passados
+        value.removeWhere((element) =>
+            element.status == Constantes.statusConcluido ||
+            element.tarefaSecreta == true);
         //ordenando a lista pela data
         // da mais recente para a mais antiga
         tarefas.sort((a, b) => DateFormat("dd/MM/yyyy", "pt_BR")
@@ -77,9 +59,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> with WidgetsBindingObserv
         quantidadeTarefas = tarefas.length;
       });
     });
-
-
-
   }
 
   Widget botoes(double largura, double altura, String tituloBotao, Color cor) =>
@@ -192,7 +171,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> with WidgetsBindingObserv
                   title: Text(Textos.btnNotasOcultas,
                       style: const TextStyle(fontSize: 18)),
                   onTap: () {
-                    Navigator.popAndPushNamed(context, Constantes.telaTarefasSecretas);
+                    Navigator.popAndPushNamed(
+                        context, Constantes.telaTarefasSecretas);
                   },
                 ),
                 ListTile(
@@ -229,9 +209,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> with WidgetsBindingObserv
                 height: 40,
                 child: FloatingActionButton(
                   backgroundColor: Colors.white,
-                  onPressed: () {
-                    //showSearch(context: context, delegate: Pesquisa());
-                  },
+                  onPressed: () {},
                   child: const Icon(
                     Icons.account_circle,
                     size: 30,
@@ -265,7 +243,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> with WidgetsBindingObserv
                           child: TextField(
                             readOnly: true,
                             onTap: () {
-                              // chamando metodo resposavel por exibir a barra de pesquisa personalizada
+                              // chamando metodo resposavel por exibir
+                              // a barra de pesquisa personalizada
                               showSearch(
                                   context: context,
                                   delegate:
@@ -377,7 +356,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> with WidgetsBindingObserv
                                         ? CrossFadeState.showFirst
                                         : CrossFadeState.showSecond,
                                     duration:
-                                        const Duration(milliseconds: 1000)),
+                                        const Duration(milliseconds: 500)),
                               )
                             ],
                           )),

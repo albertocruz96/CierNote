@@ -25,6 +25,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
   dynamic corSelecionada = Colors.black;
   bool exibirDefinirHora = false;
   bool mudarStatus = false;
+  bool tarefaSecreta = false;
   bool exibirMudarStatus = true;
   String status = "";
   final TextEditingController _controllerTitulo =
@@ -109,6 +110,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
     super.initState();
     formatarHora(hora);
     recuperarDados();
+    tarefaSecreta = widget.item.tarefaSecreta;
   }
 
   // metodo para atualizar os dados no banco de dados
@@ -126,6 +128,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
       BancoDeDados.columnTarefaCor: corSelecionada.toString(),
       BancoDeDados.columnTarefaStatus: status,
       BancoDeDados.columnTarefaFavorito: false,
+      BancoDeDados.columnTarefaSecreta: tarefaSecreta
     };
     await bancoDados.atualizar(linha);
   }
@@ -142,8 +145,8 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                   onPressed: () => Navigator.pop(context, false),
                   child: const Text("Cancelar")),
               TextButton(
-                  onPressed: () =>
-                      Navigator.pushReplacementNamed(context, Constantes.telaInicial),
+                  onPressed: () => Navigator.pushReplacementNamed(
+                      context, Constantes.telaInicial),
                   child: const Text("Sair"))
             ],
           );
@@ -404,103 +407,137 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                                               }),
                                         ],
                                       ),
+                                    ),
+                                    Visibility(
+                                      visible: !exibirMudarStatus,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(Constantes.tarefaSecreta),
+                                          Switch(
+                                              value: tarefaSecreta,
+                                              activeColor:
+                                                  PaletaCores.corAzulCianoClaro,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  tarefaSecreta = value;
+                                                  horaFormatada =
+                                                      Constantes.horaSemPrazo;
+                                                });
+                                              }),
+                                        ],
+                                      ),
                                     )
                                   ],
                                 ),
                               ),
                               SizedBox(
-                                width: 160,
-                                child: Column(
-                                  children: [
-                                    Text(Textos.txtHora,
-                                        style: const TextStyle(
-                                            fontSize: 17,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold)),
-                                    SizedBox(
-                                        height: 60,
-                                        child: Visibility(
-                                          visible: !exibirDefinirHora,
-                                          child: TextField(
-                                            readOnly: true,
-                                            decoration: InputDecoration(
-                                              hintText:
-                                                  horaFormatada.toString(),
-                                              prefixIcon: const Icon(
-                                                  Icons.access_time_filled),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                    width: 1,
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                    width: 1,
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              TimeOfDay? novoHorario =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: hora!,
-                                                builder: (context, child) {
-                                                  return Theme(
-                                                    data: ThemeData.dark()
-                                                        .copyWith(
-                                                      colorScheme:
-                                                          const ColorScheme
-                                                              .light(
-                                                        primary: PaletaCores
-                                                            .corAzulCianoClaro,
-                                                        onPrimary: Colors.white,
-                                                        surface: Colors.white,
-                                                        onSurface: Colors.black,
-                                                      ),
-                                                    ),
-                                                    child: child!,
-                                                  );
-                                                },
-                                              );
-                                              if (novoHorario != null) {
-                                                setState(() {
-                                                  hora = novoHorario;
-                                                  formatarHora(hora);
-                                                });
-                                              }
-                                            },
-                                          ),
-                                        )),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                  width: 160,
+                                  child: Visibility(
+                                    visible: !tarefaSecreta,
+                                    child: Column(
                                       children: [
-                                        Text(Constantes.horaSemPrazo),
-                                        Switch(
-                                            value: exibirDefinirHora,
-                                            activeColor:
-                                                PaletaCores.corAzulCianoClaro,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                exibirDefinirHora = value;
-                                                horaFormatada =
-                                                    Constantes.horaSemPrazo;
-                                                // redefindo valor da variavel ao desativar o switch
-                                                if (!exibirDefinirHora) {
-                                                  horaFormatada = hora;
-                                                  formatarHora(hora);
-                                                }
-                                              });
-                                            }),
+                                        Text(Textos.txtHora,
+                                            style: const TextStyle(
+                                                fontSize: 17,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold)),
+                                        SizedBox(
+                                            height: 60,
+                                            child: Visibility(
+                                              visible: !exibirDefinirHora,
+                                              child: TextField(
+                                                readOnly: true,
+                                                decoration: InputDecoration(
+                                                  hintText:
+                                                      horaFormatada.toString(),
+                                                  prefixIcon: const Icon(
+                                                      Icons.access_time_filled),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 1,
+                                                            color:
+                                                                Colors.black),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 1,
+                                                            color:
+                                                                Colors.black),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                ),
+                                                onTap: () async {
+                                                  TimeOfDay? novoHorario =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime: hora!,
+                                                    builder: (context, child) {
+                                                      return Theme(
+                                                        data: ThemeData.dark()
+                                                            .copyWith(
+                                                          colorScheme:
+                                                              const ColorScheme
+                                                                  .light(
+                                                            primary: PaletaCores
+                                                                .corAzulCianoClaro,
+                                                            onPrimary:
+                                                                Colors.white,
+                                                            surface:
+                                                                Colors.white,
+                                                            onSurface:
+                                                                Colors.black,
+                                                          ),
+                                                        ),
+                                                        child: child!,
+                                                      );
+                                                    },
+                                                  );
+                                                  if (novoHorario != null) {
+                                                    setState(() {
+                                                      hora = novoHorario;
+                                                      formatarHora(hora);
+                                                    });
+                                                  }
+                                                },
+                                              ),
+                                            )),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(Constantes.horaSemPrazo),
+                                            Switch(
+                                                value: exibirDefinirHora,
+                                                activeColor: PaletaCores
+                                                    .corAzulCianoClaro,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    exibirDefinirHora = value;
+                                                    horaFormatada =
+                                                        Constantes.horaSemPrazo;
+                                                    // redefindo valor da variavel ao desativar o switch
+                                                    if (!exibirDefinirHora) {
+                                                      horaFormatada = hora;
+                                                      formatarHora(hora);
+                                                    }
+                                                  });
+                                                }),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              ),
+                                  )),
                             ],
                           ),
                         ),

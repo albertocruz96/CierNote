@@ -50,10 +50,10 @@ class _TelaTarefaConcluidaProgressoState
       setState(() {
         if (tipoConsulta == Constantes.statusEmProgresso) {
           value.removeWhere(
-              (element) => element.status == Constantes.statusEmProgresso);
+              (element) => element.status == Constantes.statusEmProgresso || element.tarefaSecreta == true);
         } else {
           value.removeWhere(
-              (element) => element.status == Constantes.statusConcluido);
+              (element) => element.status == Constantes.statusConcluido || element.tarefaSecreta == true);
         }
         listaTarefas = value;
         if (listaTarefas.isNotEmpty) {

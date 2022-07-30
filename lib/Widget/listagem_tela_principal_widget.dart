@@ -32,7 +32,6 @@ class _ListagemTelaPrincipalWidgetState
       child: Container(
           color: Colors.white,
           child: Card(
-            color: PaletaCores.corCinzaClaro,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(20),
@@ -60,6 +59,8 @@ class _ListagemTelaPrincipalWidgetState
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               primary: Colors.white,
+                              elevation: 5,
+                              shadowColor: PaletaCores.corAzulCianoClaro,
                               shape: const RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(30))),

@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:ciernote/Modelo/notificacao_modelo.dart';
 import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:ciernote/Uteis/banco_de_dados.dart';
-import 'package:ciernote/Uteis/notificacao_servico.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../Uteis/Servicos/notificacao_servico.dart';
 import '../Uteis/constantes.dart';
 import '../Uteis/paleta_cores.dart';
 import '../Uteis/textos.dart';
@@ -31,7 +31,8 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
     super.initState();
     ativarFavorito = widget.item.favorito;
     ativarNotificacao = widget.item.notificacaoAtiva;
-    if (widget.item.status == Constantes.statusConcluido) {
+    if (widget.item.status == Constantes.statusConcluido ||
+        widget.item.tarefaSecreta == true) {
       setState(() {
         exibirBotoes = false;
       });
@@ -49,7 +50,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
           ativarFavorito = true;
         }
       } else if (tipoAtualizacao.contains(Constantes.bancoStatus)) {
-        setState((){
+        setState(() {
           status = Constantes.statusConcluido;
           ativarNotificacao = false;
           ativarFavorito = false;
@@ -254,16 +255,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                   ],
                 )
               ],
-              iconTheme: const IconThemeData(color: Colors.black),
-              leading: IconButton(
-                //setando tamanho do icone
-                iconSize: 30,
-                onPressed: () {
-                  Navigator.pushNamed(context, Constantes.telaInicial);
-                },
-                icon: const Icon(Icons.arrow_back_outlined),
-                color: Colors.black,
-              ),
+              iconTheme: const IconThemeData(color: Colors.black, size: 30),
             ),
             body: Container(
               color: Colors.white,
@@ -335,44 +327,49 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                               ),
                             ],
                           ),
-                          Column(
-                            children: [
-                              Text(Textos.txtHora,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                              Row(
+                          Visibility(
+                              visible: !widget.item.tarefaSecreta,
+                              child: Column(
                                 children: [
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 0.0, horizontal: 10.0),
-                                    height: 30,
-                                    width: 30,
-                                    child: Icon(Icons.access_time,
-                                        color: widget.item.corTarefa),
+                                  Text(Textos.txtHora,
+                                      style: const TextStyle(
+                                          fontSize: 17,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold)),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 0.0, horizontal: 10.0),
+                                        height: 30,
+                                        width: 30,
+                                        child: Icon(Icons.access_time,
+                                            color: widget.item.corTarefa),
+                                      ),
+                                      Text(widget.item.hora),
+                                    ],
                                   ),
-                                  Text(widget.item.hora),
                                 ],
-                              ),
-                            ],
-                          )
+                              ))
                         ],
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      Row(
-                        children: [
-                          Text(Textos.txtStatus,
-                              style: const TextStyle(
-                                  fontSize: 17,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold)),
-                          Text(widget.item.status,
-                              style: const TextStyle(
-                                  fontSize: 17, color: Colors.black)),
-                        ],
+                      Visibility(
+                        visible: !widget.item.tarefaSecreta,
+                        child: Row(
+                          children: [
+                            Text(Textos.txtStatus,
+                                style: const TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
+                            Text(widget.item.status,
+                                style: const TextStyle(
+                                    fontSize: 17, color: Colors.black)),
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 10,
@@ -476,7 +473,10 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                   )),
             )),
         onWillPop: () async {
-          Navigator.popAndPushNamed(context, Constantes.telaInicial);
+          widget.item.tarefaSecreta
+              ? Navigator.popAndPushNamed(
+                  context, Constantes.telaTarefasSecretas)
+              : Navigator.popAndPushNamed(context, Constantes.telaInicial);
           return false;
         });
   }

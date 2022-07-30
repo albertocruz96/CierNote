@@ -52,7 +52,6 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
     formatarHora();
   }
 
-
   // lista com as cores para o usuario selecionar
   final List<SeletorCorModelo> itensCores = [
     SeletorCorModelo(cor: PaletaCores.corMarsala),
@@ -194,8 +193,13 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                         inserirDados();
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(Textos.sucessoAdicaoTarefa)));
-                        Navigator.pushReplacementNamed(
-                            context, Constantes.telaInicial);
+                        if (tarefaSecreta) {
+                          Navigator.pushReplacementNamed(
+                              context, Constantes.telaTarefasSecretas);
+                        } else {
+                          Navigator.pushReplacementNamed(
+                              context, Constantes.telaInicial);
+                        }
                       }
                     }
                   },
@@ -342,17 +346,18 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                     ),
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(Constantes.tarefaSecreta),
                                       Switch(
                                           value: tarefaSecreta,
                                           activeColor:
-                                          PaletaCores.corAzulCianoClaro,
+                                              PaletaCores.corAzulCianoClaro,
                                           onChanged: (value) {
                                             setState(() {
                                               tarefaSecreta = value;
+                                              horaFormatada =
+                                                  Constantes.horaSemPrazo;
                                             });
                                           }),
                                     ],
@@ -360,99 +365,112 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                 ],
                               ),
                               SizedBox(
-                                width: 180,
-                                child: Column(
-                                  children: [
-                                    Text(Textos.txtHora,
-                                        style: const TextStyle(
-                                            fontSize: 17,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold)),
-                                    SizedBox(
-                                        width: 180,
-                                        height: 60,
-                                        child: Visibility(
-                                          visible: !exibirDefinirHora,
-                                          child: TextField(
-                                            readOnly: true,
-                                            decoration: InputDecoration(
-                                              hintText:
-                                                  horaFormatada.toString(),
-                                              prefixIcon: const Icon(
-                                                  Icons.access_time_filled),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                    width: 1,
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                    width: 1,
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              TimeOfDay? novoHorario =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: hora!,
-                                                builder: (context, child) {
-                                                  return Theme(
-                                                    data: ThemeData.dark()
-                                                        .copyWith(
-                                                      colorScheme:
-                                                          const ColorScheme
-                                                              .light(
-                                                        primary: PaletaCores
-                                                            .corAzulCianoClaro,
-                                                        onPrimary: Colors.white,
-                                                        surface: Colors.white,
-                                                        onSurface: Colors.black,
-                                                      ),
-                                                    ),
-                                                    child: child!,
-                                                  );
-                                                },
-                                              );
-                                              if (novoHorario != null) {
-                                                setState(() {
-                                                  hora = novoHorario;
-                                                  formatarHora();
-                                                });
-                                              }
-                                            },
-                                          ),
-                                        )),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                  width: 180,
+                                  child: Visibility(
+                                    visible: !tarefaSecreta,
+                                    child: Column(
                                       children: [
-                                        Text(Constantes.horaSemPrazo),
-                                        Switch(
-                                            value: exibirDefinirHora,
-                                            activeColor:
-                                                PaletaCores.corAzulCianoClaro,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                exibirDefinirHora = value;
-                                                horaFormatada =
-                                                    Constantes.horaSemPrazo;
-                                                // redefindo valor da variavel ao desativar o switch
-                                                if (!exibirDefinirHora) {
-                                                  horaFormatada = hora;
-                                                  formatarHora();
-                                                }
-                                              });
-                                            }),
+                                        Text(Textos.txtHora,
+                                            style: const TextStyle(
+                                                fontSize: 17,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold)),
+                                        SizedBox(
+                                            width: 180,
+                                            height: 60,
+                                            child: Visibility(
+                                              visible: !exibirDefinirHora,
+                                              child: TextField(
+                                                readOnly: true,
+                                                decoration: InputDecoration(
+                                                  hintText:
+                                                      horaFormatada.toString(),
+                                                  prefixIcon: const Icon(
+                                                      Icons.access_time_filled),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 1,
+                                                            color:
+                                                                Colors.black),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 1,
+                                                            color:
+                                                                Colors.black),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                ),
+                                                onTap: () async {
+                                                  TimeOfDay? novoHorario =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime: hora!,
+                                                    builder: (context, child) {
+                                                      return Theme(
+                                                        data: ThemeData.dark()
+                                                            .copyWith(
+                                                          colorScheme:
+                                                              const ColorScheme
+                                                                  .light(
+                                                            primary: PaletaCores
+                                                                .corAzulCianoClaro,
+                                                            onPrimary:
+                                                                Colors.white,
+                                                            surface:
+                                                                Colors.white,
+                                                            onSurface:
+                                                                Colors.black,
+                                                          ),
+                                                        ),
+                                                        child: child!,
+                                                      );
+                                                    },
+                                                  );
+                                                  if (novoHorario != null) {
+                                                    setState(() {
+                                                      hora = novoHorario;
+                                                      formatarHora();
+                                                    });
+                                                  }
+                                                },
+                                              ),
+                                            )),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(Constantes.horaSemPrazo),
+                                            Switch(
+                                                value: exibirDefinirHora,
+                                                activeColor: PaletaCores
+                                                    .corAzulCianoClaro,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    exibirDefinirHora = value;
+                                                    horaFormatada =
+                                                        Constantes.horaSemPrazo;
+                                                    // redefindo valor da variavel ao desativar o switch
+                                                    if (!exibirDefinirHora) {
+                                                      horaFormatada = hora;
+                                                      formatarHora();
+                                                    }
+                                                  });
+                                                }),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              ),
+                                  )),
                             ],
                           ),
                         ),

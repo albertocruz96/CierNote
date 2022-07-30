@@ -42,8 +42,7 @@ class _TarefaWidgetState extends State<TarefaWidget> {
                           style: const TextStyle(
                             fontSize: 25,
                             color: Colors.white,
-                          )
-                      )),
+                          ))),
                   Container(
                     margin: const EdgeInsets.only(
                         top: 0.0, right: 0.0, bottom: 0.0, left: 0.0),
@@ -51,27 +50,31 @@ class _TarefaWidgetState extends State<TarefaWidget> {
                     height: 90,
                     child: Text(widget.item.conteudo,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 20,color: Colors.black)),
+                        style:
+                            const TextStyle(fontSize: 20, color: Colors.black)),
                   ),
                   SizedBox(
                     height: 46,
                     width: 220,
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.access_time_filled,
-                                color: Colors.white, size: 20),
-                            const SizedBox(width: 5),
-                            Text(
-                              widget.item.hora,
-                              textAlign: TextAlign.justify,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                        Visibility(
+                          visible: !widget.item.tarefaSecreta,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.access_time_filled,
+                                  color: Colors.white, size: 20),
+                              const SizedBox(width: 5),
+                              Text(
+                                widget.item.hora,
+                                textAlign: TextAlign.justify,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -87,50 +90,54 @@ class _TarefaWidgetState extends State<TarefaWidget> {
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white),
                                 ),
-
                               ],
                             ),
-                            SizedBox(
-                              width: 25,
-                              child: LayoutBuilder(
-                                builder: (context, constraints) {
-                                  if (widget.item.favorito) {
-                                    return const Icon(
-                                      Icons.favorite_outlined,
-                                      size: 20,
-                                      color: Colors.white,
-                                    );
-                                  } else {
-                                    return const Icon(
-                                      Icons.favorite_border_outlined,
-                                      size: 20,
-                                      color: Colors.white,
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: 25,
-                              child: LayoutBuilder(
-                                builder: (context, constraints) {
-                                  if (widget.item.notificacaoAtiva) {
-                                    return const Icon(
-                                      Icons.notifications_rounded,
-                                      size: 20,
-                                      color: Colors.white,
-                                    );
-                                  } else {
-                                    return const Icon(
-                                      Icons.notifications_none_outlined,
-                                      size: 20,
-                                      color: Colors.white,
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-
+                            Visibility(
+                                visible: !widget.item.tarefaSecreta,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 25,
+                                      child: LayoutBuilder(
+                                        builder: (context, constraints) {
+                                          if (widget.item.favorito) {
+                                            return const Icon(
+                                              Icons.favorite_outlined,
+                                              size: 20,
+                                              color: Colors.white,
+                                            );
+                                          } else {
+                                            return const Icon(
+                                              Icons.favorite_border_outlined,
+                                              size: 20,
+                                              color: Colors.white,
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 25,
+                                      child: LayoutBuilder(
+                                        builder: (context, constraints) {
+                                          if (widget.item.notificacaoAtiva) {
+                                            return const Icon(
+                                              Icons.notifications_rounded,
+                                              size: 20,
+                                              color: Colors.white,
+                                            );
+                                          } else {
+                                            return const Icon(
+                                              Icons.notifications_none_outlined,
+                                              size: 20,
+                                              color: Colors.white,
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ))
                           ],
                         ),
                       ],

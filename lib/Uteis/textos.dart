@@ -8,6 +8,8 @@ class Textos {
   static String btnCriarTarefaTexto = "Em texto";
   static String btnCriarTarefaLista = "Em Lista";
   static String btnNotasOcultas = "Notas Secretas";
+  static String btnLiberarAcesso = "Liberar Acesso";
+  static String btnTentarNovamente = "Tentar Novamente";
   static String btnFecharJanela = "Fechar";
   static String btnLixeira = "Lixeira";
   static String btnVerTodasTarefa = "Ver tudo";
@@ -19,12 +21,14 @@ class Textos {
 
   static String txtLegMenuLateral = "Menu Lateral";
 
+  static String txtLiberarSenhaHint = "A senha da sua conta";
+  static String txtLegLiberarAcesso = "Liberar Acesso usando a senha";
+
   // Tela principal
   static String txtLegBarraBusca = "Pesquise sua tarefa por aqui";
   static String txtLegTarefas = "Todas as tarefas";
 
   static String txtBoasVindas = "Bom dia";
-
 
   // Tela criar e editar tarefa
   static String txtTelaCriarTarefa = "Criar Tarefa";
@@ -64,6 +68,9 @@ class Textos {
   // String Alert Dialog
   static String txtTituloAlertaSair = "Deseja sair sem salvar ? ";
   static String txtTituloAlertaExclusao = "Deseja excluir esta tarefa ? ";
+
+  static String txtLegAutenticacao =
+      "Por favor,autentique-se para acessar as tarefas secretas";
 
   // String de retorno ao usuario ERRO e SUCESSO
   static String sucessoAdicaoFavorito = "Tarefa adionada aos favoritos";

@@ -34,7 +34,8 @@ dependencies:
   # sql lite para banco de dados local
   sqflite: ^2.0.3
   path_provider: ^2.0.11
-  path_provider_windows: ^2.1.0
+  # necessario para a biometria
+  local_auth: ^2.1.0
   provider:
 # necessario para o data time horizontal
   date_picker_timeline:

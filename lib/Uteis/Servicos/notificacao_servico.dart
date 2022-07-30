@@ -1,13 +1,14 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Modelo/notificacao_modelo.dart';
-import '../Uteis/constantes.dart';
 
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
 
 import 'package:intl/intl.dart';
+
+import '../../Modelo/notificacao_modelo.dart';
+import '../constantes.dart';
 
 class NotificacaoServico {
   late FlutterLocalNotificationsPlugin localNotificationsPlugin;
