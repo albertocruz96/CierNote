@@ -5,17 +5,19 @@ import '../Modelo/tarefa_modelo.dart';
 import '../Uteis/paleta_cores.dart';
 import '../Uteis/textos.dart';
 
-class ListagemTarefasWidget extends StatefulWidget {
-  const ListagemTarefasWidget({Key? key, required this.tarefas})
+class ListagemTelaPrincipalWidget extends StatefulWidget {
+  const ListagemTelaPrincipalWidget({Key? key, required this.tarefas})
       : super(key: key);
 
   final List<TarefaModelo> tarefas;
 
   @override
-  State<ListagemTarefasWidget> createState() => _ListagemTarefasWidgetState();
+  State<ListagemTelaPrincipalWidget> createState() =>
+      _ListagemTelaPrincipalWidgetState();
 }
 
-class _ListagemTarefasWidgetState extends State<ListagemTarefasWidget> {
+class _ListagemTelaPrincipalWidgetState
+    extends State<ListagemTelaPrincipalWidget> {
   bool mudarVisualizacao = false;
   String nomeBotaoMudarVisualizacao = Textos.btnVerGrade;
 
@@ -24,7 +26,7 @@ class _ListagemTarefasWidgetState extends State<ListagemTarefasWidget> {
     double larguraTela = MediaQuery.of(context).size.width;
     return AnimatedContainer(
       curve: Curves.easeInOutBack,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 2),
       height: mudarVisualizacao == true ? 400 : 270,
       width: larguraTela,
       child: Container(
@@ -56,8 +58,12 @@ class _ListagemTarefasWidgetState extends State<ListagemTarefasWidget> {
                           height: 30,
                           width: 150,
                           child: ElevatedButton(
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(30))),
+                            ),
                             onPressed: () {
                               setState(() {
                                 if (!mudarVisualizacao) {
@@ -83,7 +89,7 @@ class _ListagemTarefasWidgetState extends State<ListagemTarefasWidget> {
                       ],
                     ),
                   ),
-                 const SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   SizedBox(

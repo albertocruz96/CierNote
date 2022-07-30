@@ -9,8 +9,7 @@ class Consulta {
   static BancoDeDados bancoDados = BancoDeDados.instance;
 
   //metodo para realizar a consulta no banco de dados
-  static Future<List<TarefaModelo>> consultarTarefasBanco(
-      String removerTarefaConcluido) async {
+  static Future<List<TarefaModelo>> consultarTarefasBanco() async {
     final registros = await bancoDados.consultarLinhas();
     List<TarefaModelo> lista = [];
     for (var linha in registros) {
@@ -33,6 +32,12 @@ class Consulta {
       } else {
         notificacao = true;
       }
+      bool tarefaSecreta;
+      if (linha[Constantes.bancoTarefaSecreta].toString().contains("0")) {
+        tarefaSecreta = false;
+      } else {
+        tarefaSecreta = true;
+      }
       lista.add(TarefaModelo(
           id: linha[Constantes.bancoId],
           titulo: linha[Constantes.bancoTitulo],
@@ -42,24 +47,25 @@ class Consulta {
           conteudo: linha[Constantes.bancoConteudo],
           corTarefa: instanciaCor,
           favorito: favorito,
-          notificacaoAtiva: notificacao));
+          notificacaoAtiva: notificacao,
+          tarefaSecreta: tarefaSecreta));
       // verificando qual parametro foi passado para o metodo
       // para remover itens que nao devem aparecer dependendo da visualizacao
-      if (removerTarefaConcluido == Constantes.statusConcluido) {
-        for (int i = 0; i < lista.length; i++) {
-          // percorrendo os index da lista e verificando quais contem a condicao desejada
-          if (lista[i].status == Constantes.statusConcluido) {
-            lista.removeAt(i);
-          }
-        }
-      } else if (removerTarefaConcluido == Constantes.statusEmProgresso) {
-        for (int i = 0; i < lista.length; i++) {
-          // percorrendo os index da lista e verificando quais contem a condicao desejada
-          if (lista[i].status == Constantes.statusEmProgresso) {
-            lista.removeAt(i);
-          }
-        }
-      }
+      // if (removerTarefaConcluido == Constantes.statusConcluido) {
+      //   for (int i = 0; i < lista.length; i++) {
+      //     // percorrendo os index da lista e verificando quais contem a condicao desejada
+      //     if (lista[i].status == Constantes.statusConcluido) {
+      //       lista.removeAt(i);
+      //     }
+      //   }
+      // } else if (removerTarefaConcluido == Constantes.statusEmProgresso) {
+      //   for (int i = 0; i < lista.length; i++) {
+      //     // percorrendo os index da lista e verificando quais contem a condicao desejada
+      //     if (lista[i].status == Constantes.statusEmProgresso) {
+      //       lista.removeAt(i);
+      //     }
+      //   }
+      // }
     }
     return lista;
   }

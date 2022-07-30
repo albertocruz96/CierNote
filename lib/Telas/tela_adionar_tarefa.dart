@@ -21,6 +21,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
   dynamic horaFormatada;
   dynamic corSelecionada = Colors.black;
   bool exibirDefinirHora = false;
+  bool tarefaSecreta = false;
   final TextEditingController _controllerTitulo =
       TextEditingController(text: "");
   final TextEditingController _controllerConteudo =
@@ -79,6 +80,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
       BancoDeDados.columnTarefaStatus: Constantes.statusEmProgresso,
       BancoDeDados.columnTarefaFavorito: false,
       BancoDeDados.columnTarefaNotificacao: false,
+      BancoDeDados.columnTarefaSecreta: tarefaSecreta
     };
     await bancoDados.inserir(linha);
   }
@@ -222,7 +224,6 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                           child: Row(
                             children: [
                               Text(Textos.txtTituloTarefa,
-                                  textAlign: TextAlign.center,
                                   style: const TextStyle(
                                       fontSize: 17,
                                       color: Colors.black,
@@ -339,7 +340,23 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                         ),
                                       ),
                                     ),
-                                  )
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      Text(Constantes.tarefaSecreta),
+                                      Switch(
+                                          value: tarefaSecreta,
+                                          activeColor:
+                                          PaletaCores.corAzulCianoClaro,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              tarefaSecreta = value;
+                                            });
+                                          }),
+                                    ],
+                                  ),
                                 ],
                               ),
                               SizedBox(

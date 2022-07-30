@@ -6,6 +6,8 @@ import 'package:ciernote/Uteis/constantes.dart';
 import 'package:ciernote/Telas/tela_tarefa_detalhada.dart';
 import 'package:flutter/material.dart';
 
+import '../Telas/tela_tarefa_secretas.dart';
+
 class Rotas {
   static GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 
@@ -16,6 +18,8 @@ class Rotas {
     switch (settings.name) {
       case Constantes.telaInicial:
         return MaterialPageRoute(builder: (_) => const TelaPrincipal());
+      case Constantes.telaTarefasSecretas:
+        return MaterialPageRoute(builder: (_) => const TelaTarefasSecretas());
       case Constantes.telaTarefaAdicao:
         return MaterialPageRoute(builder: (_) => const TelaAdionarTarefa());
       case Constantes.telaTarefaDetalhada:

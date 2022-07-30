@@ -17,6 +17,7 @@ class BancoDeDados {
   static const columnTarefaStatus = Constantes.bancoStatus;
   static const columnTarefaFavorito = Constantes.bancoFavorito;
   static const columnTarefaNotificacao = Constantes.bancoNotificacao;
+  static const columnTarefaSecreta = Constantes.bancoTarefaSecreta;
 
   // torna a clase singleton
   BancoDeDados._privateConstructor();
@@ -52,7 +53,8 @@ class BancoDeDados {
             $columnTarefaData TEXT NOT NULL,
             $columnTarefaStatus TEXT NOT NULL,
             $columnTarefaFavorito BIT NOT NULL,
-            $columnTarefaNotificacao BIT NOT NULL
+            $columnTarefaNotificacao BIT NOT NULL,
+            $columnTarefaSecreta BIT NOT NULL
           )
           ''');
   }

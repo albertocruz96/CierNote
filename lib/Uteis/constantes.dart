@@ -5,6 +5,7 @@ class Constantes {
   static const String telaTarefaAdicao = "/telaTarefaAdicao";
   static const String telaTarefaDetalhada = "/telaTarefaDetalhada";
   static const String telaTarefaEditar = "/telaTarefaEdicao";
+  static const String telaTarefasSecretas = "/telaTarefaSecreta";
   static const String telaTarefaConcluidaProgresso =
       "/telaTarefaConcluidaProgresso";
   static const String telaExibirConcluido = "telaConcluida";
@@ -12,6 +13,7 @@ class Constantes {
   static const String telaParametroDetalhes = "detalhesTarefa";
 
   static String horaSemPrazo = "Sem Horário";
+  static String tarefaSecreta = "Tarefa Secreta";
   // constantes para o status da tarefa
   static const String statusEmProgresso = "Em Progresso";
   static const String statusConcluido = "Concluido";
@@ -37,4 +39,5 @@ class Constantes {
   static const bancoStatus = 'status';
   static const bancoFavorito = 'favorito';
   static const bancoNotificacao = 'notificacao';
+  static const bancoTarefaSecreta = 'secreta';
 }

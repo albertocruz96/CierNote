@@ -3,13 +3,13 @@ import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:ciernote/Uteis/constantes.dart';
 import 'package:ciernote/Uteis/notificacao_servico.dart';
 import 'package:ciernote/Uteis/paleta_cores.dart';
-import 'package:ciernote/Widget/listagem_principal_tarefa_widget.dart';
+import 'package:ciernote/Widget/listagem_tela_principal_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Uteis/textos.dart';
 import 'package:intl/intl.dart';
 
-import '../Widget/pesquisa_tarefas_widget.dart';
+import '../Widget/barra_pesquisa_tarefas_widget.dart';
 
 class TelaPrincipal extends StatefulWidget {
   const TelaPrincipal({Key? key}) : super(key: key);
@@ -18,18 +18,18 @@ class TelaPrincipal extends StatefulWidget {
   State<TelaPrincipal> createState() => _TelaPrincipalState();
 }
 
-class _TelaPrincipalState extends State<TelaPrincipal> {
+class _TelaPrincipalState extends State<TelaPrincipal> with WidgetsBindingObserver{
   List<TarefaModelo> tarefas = [];
   int quantidadeTarefas = 0;
-  bool mudarVisualizacao = false;
+  bool exibirOpcaoCriarTarefa = true;
   String nomeUsuario = "Jhonatan";
-  String nomeBotaoMudarVisualizacao = Textos.btnVerGrade;
   TimeOfDay? hora = const TimeOfDay(hour: 19, minute: 00);
   DateTime data = DateTime(2022, 07, 02);
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     consultarTarefas(); // chamando metodo
     checarNotificacao();
   }
@@ -40,14 +40,34 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         .verificarNotificacoes();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state){
+    super.didChangeAppLifecycleState(state);
+    if(state == AppLifecycleState.resumed){
+      print("retomou");
+    }else if(state == AppLifecycleState.paused){
+      print("fdfsd");
+    }else if(state == AppLifecycleState.inactive){
+      print("aaa");
+    }else if(state == AppLifecycleState.detached){
+      print("carai");
+    }
+  }
+ @override
+ void dispose(){
+    super.dispose();
+ }
+
 // metodo responsavel por pegar os itens
 // no banco de dados e exibir ao usuario ordenando pela data
   consultarTarefas() async {
     // chamando metodo responsavel por pegar os itens no banco de dados
-    await Consulta.consultarTarefasBanco(Constantes.statusConcluido)
+    await Consulta.consultarTarefasBanco()
         .then((value) {
       setState(() {
+
         tarefas = value;
+        value.removeWhere((element) => element.status == Constantes.statusConcluido);
         //ordenando a lista pela data
         // da mais recente para a mais antiga
         tarefas.sort((a, b) => DateFormat("dd/MM/yyyy", "pt_BR")
@@ -57,7 +77,95 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         quantidadeTarefas = tarefas.length;
       });
     });
+
+
+
   }
+
+  Widget botoes(double largura, double altura, String tituloBotao, Color cor) =>
+      SizedBox(
+        width: largura,
+        height: altura,
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                shadowColor: cor,
+                elevation: 10,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                primary: Colors.white),
+            onPressed: () {
+              if (tituloBotao == Textos.btnCriarTarefa) {
+                setState(() {
+                  exibirOpcaoCriarTarefa = false;
+                });
+              } else if (tituloBotao == Textos.btnEmProgresso) {
+                Navigator.pushReplacementNamed(
+                    context, Constantes.telaTarefaConcluidaProgresso,
+                    arguments: Constantes.telaExibirProgresso);
+              } else if (tituloBotao == Textos.btnConcluido) {
+                Navigator.pushReplacementNamed(
+                    context, Constantes.telaTarefaConcluidaProgresso,
+                    arguments: Constantes.telaExibirConcluido);
+              } else if (tituloBotao == Textos.btnCriarTarefaTexto) {
+                Navigator.pushReplacementNamed(
+                    context, Constantes.telaTarefaAdicao);
+              } else {
+                setState(() {
+                  exibirOpcaoCriarTarefa = true;
+                });
+              }
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (tituloBotao == Textos.btnCriarTarefa) {
+                      return const Icon(
+                        Icons.list_alt_outlined,
+                        size: 40,
+                        color: Colors.black,
+                      );
+                    } else if (tituloBotao == Textos.btnEmProgresso) {
+                      return const Icon(
+                        Icons.access_time_outlined,
+                        size: 40,
+                        color: Colors.black,
+                      );
+                    } else if (tituloBotao == Textos.btnConcluido) {
+                      return const Icon(
+                        Icons.done,
+                        size: 40,
+                        color: Colors.black,
+                      );
+                    } else if (tituloBotao == Textos.btnCriarTarefaTexto) {
+                      return const Icon(
+                        Icons.text_snippet_outlined,
+                        size: 40,
+                        color: Colors.black,
+                      );
+                    } else if (tituloBotao == Textos.btnCriarTarefaLista) {
+                      return const Icon(
+                        Icons.list,
+                        size: 40,
+                        color: Colors.black,
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+                Text(
+                  tituloBotao,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                )
+              ],
+            )),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -81,25 +189,24 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 ListTile(
                   leading: const Icon(Icons.lock,
                       size: 25, color: PaletaCores.corAzulCianoClaro),
-                  title: Text(Textos.btnNotasOcultas,style: const TextStyle(
-                    fontSize: 18
-                  )),
-                  onTap: () {},
+                  title: Text(Textos.btnNotasOcultas,
+                      style: const TextStyle(fontSize: 18)),
+                  onTap: () {
+                    Navigator.popAndPushNamed(context, Constantes.telaTarefasSecretas);
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.favorite,
                       size: 25, color: PaletaCores.corAzulCianoClaro),
-                  title: Text(Textos.btnFavoritos,style: const TextStyle(
-                      fontSize: 18
-                  )),
+                  title: Text(Textos.btnFavoritos,
+                      style: const TextStyle(fontSize: 18)),
                   onTap: () {},
                 ),
                 ListTile(
                   leading: const Icon(Icons.restore_from_trash_sharp,
                       size: 25, color: PaletaCores.corAzulCianoClaro),
-                  title: Text(Textos.btnLixeira,style: const TextStyle(
-                      fontSize: 18
-                  )),
+                  title: Text(Textos.btnLixeira,
+                      style: const TextStyle(fontSize: 18)),
                   onTap: () {},
                 ),
               ],
@@ -206,128 +313,72 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                               const SizedBox(
                                 height: 10.0,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  SizedBox(
-                                    width: 120,
-                                    height: 140,
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            shadowColor: Colors.red,
-                                            elevation: 10,
-                                            shape: const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(30))),
-                                            primary: Colors.white),
-                                        onPressed: () {
-                                          Navigator.pushReplacementNamed(
-                                              context,
-                                              Constantes.telaTarefaAdicao);
-                                        },
+                              SizedBox(
+                                height: 215,
+                                width: larguraTela,
+                                child: AnimatedCrossFade(
+                                    firstChild: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        botoes(120, 140, Textos.btnCriarTarefa,
+                                            PaletaCores.corVermelho),
+                                        botoes(120, 140, Textos.btnEmProgresso,
+                                            PaletaCores.corAmarela),
+                                        botoes(120, 140, Textos.btnConcluido,
+                                            PaletaCores.corVerde),
+                                      ],
+                                    ),
+                                    secondChild: SizedBox(
+                                      height: 200,
+                                      child: Card(
+                                        margin: const EdgeInsets.all(10),
+                                        elevation: 10,
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
+                                              MainAxisAlignment.center,
                                           children: [
-                                            const Icon(
-                                              Icons.list_alt,
-                                              size: 40,
-                                              color: Colors.black,
+                                            Text(Textos.btnCriarTarefa,
+                                                style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                //btn criar em texto
+                                                botoes(
+                                                    120,
+                                                    120,
+                                                    Textos.btnCriarTarefaTexto,
+                                                    PaletaCores
+                                                        .corAzulCianoClaro),
+                                                //btn fechar janela
+                                                botoes(
+                                                    90,
+                                                    30,
+                                                    Textos.btnFecharJanela,
+                                                    PaletaCores.corVermelho),
+                                                //btn criar em lista
+                                                botoes(
+                                                    120,
+                                                    120,
+                                                    Textos.btnCriarTarefaLista,
+                                                    PaletaCores
+                                                        .corAzulCianoClaro),
+                                              ],
                                             ),
-                                            Text(
-                                              Textos.btnCriarTarefa,
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
-                                            )
                                           ],
-                                        )),
-                                  ),
-                                  SizedBox(
-                                    width: 120,
-                                    height: 140,
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            elevation: 10,
-                                            shadowColor: Colors.yellow,
-                                            shape: const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(30))),
-                                            primary: Colors.white),
-                                        onPressed: () {
-                                          Navigator.pushReplacementNamed(
-                                              context,
-                                              Constantes
-                                                  .telaTarefaConcluidaProgresso,
-                                              arguments: Constantes
-                                                  .telaExibirProgresso);
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            const Icon(
-                                              Icons.access_time,
-                                              size: 40,
-                                              color: Colors.black,
-                                            ),
-                                            Text(
-                                              Textos.btnEmProgresso,
-                                              maxLines: 2,
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          ],
-                                        )),
-                                  ),
-                                  SizedBox(
-                                    width: 120,
-                                    height: 140,
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            elevation: 10,
-                                            shadowColor: PaletaCores.corVerde,
-                                            shape: const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(30))),
-                                            primary: Colors.white),
-                                        onPressed: () {
-                                          Navigator.pushReplacementNamed(
-                                              context,
-                                              Constantes
-                                                  .telaTarefaConcluidaProgresso,
-                                              arguments: Constantes
-                                                  .telaExibirConcluido);
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            const Icon(
-                                              Icons.done_outlined,
-                                              size: 40,
-                                              color: Colors.black,
-                                            ),
-                                            Text(
-                                              Textos.btnConcluido,
-                                              maxLines: 2,
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          ],
-                                        )),
-                                  ),
-                                ],
-                              ),
+                                        ),
+                                      ),
+                                    ),
+                                    crossFadeState: exibirOpcaoCriarTarefa
+                                        ? CrossFadeState.showFirst
+                                        : CrossFadeState.showSecond,
+                                    duration:
+                                        const Duration(milliseconds: 1000)),
+                              )
                             ],
                           )),
                     ],
@@ -338,7 +389,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               onTap: () {
                 FocusScope.of(context).requestFocus(FocusNode());
               },
-              child: ListagemTarefasWidget(tarefas: tarefas))),
+              child: ListagemTelaPrincipalWidget(tarefas: tarefas))),
     );
   }
 }

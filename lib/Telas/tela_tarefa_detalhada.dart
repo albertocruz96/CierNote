@@ -476,7 +476,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                   )),
             )),
         onWillPop: () async {
-          Navigator.pushNamed(context, Constantes.telaInicial);
+          Navigator.popAndPushNamed(context, Constantes.telaInicial);
           return false;
         });
   }

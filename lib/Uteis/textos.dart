@@ -5,7 +5,10 @@ class Textos {
   static String btnConcluido = "Conclúido";
   static String btnEmProgresso = "Em Progresso";
   static String btnCriarTarefa = "Criar Tarefa";
+  static String btnCriarTarefaTexto = "Em texto";
+  static String btnCriarTarefaLista = "Em Lista";
   static String btnNotasOcultas = "Notas Secretas";
+  static String btnFecharJanela = "Fechar";
   static String btnLixeira = "Lixeira";
   static String btnVerTodasTarefa = "Ver tudo";
   static String btnSalvar = "Salvar";
@@ -21,6 +24,7 @@ class Textos {
   static String txtLegTarefas = "Todas as tarefas";
 
   static String txtBoasVindas = "Bom dia";
+
 
   // Tela criar e editar tarefa
   static String txtTelaCriarTarefa = "Criar Tarefa";

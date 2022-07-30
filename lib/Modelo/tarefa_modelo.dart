@@ -8,7 +8,8 @@ class TarefaModelo {
       this.favorito = false,
       this.notificacaoAtiva = false,
       required this.status,
-      required this.corTarefa});
+      required this.corTarefa,
+      this.tarefaSecreta = false});
 
   int id;
   String titulo;
@@ -19,4 +20,5 @@ class TarefaModelo {
   dynamic corTarefa;
   bool favorito;
   bool notificacaoAtiva;
+  bool tarefaSecreta;
 }

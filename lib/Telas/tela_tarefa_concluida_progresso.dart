@@ -27,7 +27,6 @@ class _TelaTarefaConcluidaProgressoState
   String nomeTela = "";
   String tipoConsulta = "";
 
-
   @override
   void initState() {
     super.initState();
@@ -47,8 +46,15 @@ class _TelaTarefaConcluidaProgressoState
   // metodo responsavel por realizar as consultas ao banco de dados
   consultarTarefas() async {
     // chamando metodo responsavel por pegar a lista de tarefas
-    await Consulta.consultarTarefasBanco(tipoConsulta).then((value) {
+    await Consulta.consultarTarefasBanco().then((value) {
       setState(() {
+        if (tipoConsulta == Constantes.statusEmProgresso) {
+          value.removeWhere(
+              (element) => element.status == Constantes.statusEmProgresso);
+        } else {
+          value.removeWhere(
+              (element) => element.status == Constantes.statusConcluido);
+        }
         listaTarefas = value;
         if (listaTarefas.isNotEmpty) {
           pegarDataAntiga();
@@ -68,9 +74,9 @@ class _TelaTarefaConcluidaProgressoState
     //pegando o tamanho  da lista
     quantidadeTarefas = listaAuxiliar.length;
   }
+
   // metodo responsavel por ordenar a lista da data mais antigo para a mais recente e definir valor para a variavel
   pegarDataAntiga() {
-
     listaTarefas.sort((a, b) => DateFormat("dd/MM/yyyy", "pt_BR")
         .parse(a.data)
         .compareTo(DateFormat("dd/MM/yyyy", "pt_BR").parse(b.data)));
