@@ -8,14 +8,18 @@ class AutenticacaoLocalServico extends ChangeNotifier {
 
   AutenticacaoLocalServico({required this.autenticacao});
 
+  // future para verificar se o aparelho suporta leitor de
+  // biometria e se existe biometria cadastrada
   Future<bool> verificarBiometriaDisponivel() async {
-    final bool canAuthenticateWithBiometrics =
+    final bool verificarBiometriaDisponivel =
         await autenticacao.canCheckBiometrics;
-    return canAuthenticateWithBiometrics ||
-        await autenticacao.isDeviceSupported();
+    final dispositivoSuportaBiometria = await autenticacao.isDeviceSupported();
+    return verificarBiometriaDisponivel && dispositivoSuportaBiometria;
   }
 
+  //future para exibir box de autenticacao
   Future<bool> autenticar() async {
-    return await autenticacao.authenticate(localizedReason: Textos.txtLegAutenticacao);
+    return await autenticacao.authenticate(
+        localizedReason: Textos.txtLegAutenticacao);
   }
 }

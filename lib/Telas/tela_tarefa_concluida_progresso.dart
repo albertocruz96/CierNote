@@ -49,11 +49,13 @@ class _TelaTarefaConcluidaProgressoState
     await Consulta.consultarTarefasBanco().then((value) {
       setState(() {
         if (tipoConsulta == Constantes.statusEmProgresso) {
-          value.removeWhere(
-              (element) => element.status == Constantes.statusEmProgresso || element.tarefaSecreta == true);
+          value.removeWhere((element) =>
+              element.status == Constantes.statusEmProgresso ||
+              element.tarefaSecreta == true);
         } else {
-          value.removeWhere(
-              (element) => element.status == Constantes.statusConcluido || element.tarefaSecreta == true);
+          value.removeWhere((element) =>
+              element.status == Constantes.statusConcluido ||
+              element.tarefaSecreta == true);
         }
         listaTarefas = value;
         if (listaTarefas.isNotEmpty) {
@@ -175,8 +177,15 @@ class _TelaTarefaConcluidaProgressoState
                           height: 35,
                           width: 150,
                           child: ElevatedButton(
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                              side: const BorderSide(color: PaletaCores.corAzulCianoClaro),
+                              primary: Colors.white,
+                              elevation: 5,
+                              shadowColor: PaletaCores.corAzulCianoClaro,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(30))),
+                            ),
                             onPressed: () {
                               setState(() {
                                 listaAuxiliar.clear(); // limpando lista

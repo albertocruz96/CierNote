@@ -220,15 +220,18 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
               Container(
                 margin: const EdgeInsets.all(10),
                 width: 120,
-                height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    side: const BorderSide(color: PaletaCores.corVerde),
+                    shadowColor: PaletaCores.corVerde,
                       shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      primary: Colors.green),
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      primary: Colors.white),
                   child: Text(Textos.btnAtualizar,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 20)),
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20)),
                   onPressed: () {
                     confirmacaoSairTela = true;
                     if (_chaveFormulario.currentState!.validate()) {
@@ -242,7 +245,13 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                         //dfsf
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(Textos.sucessoEditarTarefa)));
-                        Navigator.pushNamed(context, Constantes.telaInicial);
+                        if (tarefaSecreta) {
+                          Navigator.pushReplacementNamed(
+                              context, Constantes.telaTarefasSecretas);
+                        } else {
+                          Navigator.pushReplacementNamed(
+                              context, Constantes.telaInicial);
+                        }
                       }
                     }
                   },
@@ -424,6 +433,11 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                                                   tarefaSecreta = value;
                                                   horaFormatada =
                                                       Constantes.horaSemPrazo;
+                                                  // redefindo valor da variavel ao desativar o switch
+                                                  if (!exibirDefinirHora) {
+                                                    horaFormatada = hora;
+                                                    formatarHora(hora);
+                                                  }
                                                 });
                                               }),
                                         ],

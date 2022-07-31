@@ -22,7 +22,7 @@ class Textos {
   static String txtLegMenuLateral = "Menu Lateral";
 
   static String txtLiberarSenhaHint = "A senha da sua conta";
-  static String txtLegLiberarAcesso = "Liberar Acesso usando a senha";
+  static String txtLegLiberarAcesso = "É necessário autenticar - se para liberar o acesso a está tela";
 
   // Tela principal
   static String txtLegBarraBusca = "Pesquise sua tarefa por aqui";

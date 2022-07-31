@@ -58,6 +58,7 @@ class _ListagemTelaPrincipalWidgetState
                           width: 150,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
+                              side: const BorderSide(color: PaletaCores.corAzulCianoClaro),
                               primary: Colors.white,
                               elevation: 5,
                               shadowColor: PaletaCores.corAzulCianoClaro,

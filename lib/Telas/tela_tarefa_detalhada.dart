@@ -426,12 +426,16 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                                 height: 50,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
+                                      side: const BorderSide(color: PaletaCores.corVerde),
+                                      shadowColor: PaletaCores.corVerde,
+                                      elevation: 10,
                                       shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
-                                      primary: Colors.green),
+                                              Radius.circular(30))),
+                                      primary: Colors.white),
                                   child: Text(Textos.btnConcluido,
                                       style: const TextStyle(
+                                          color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20)),
                                   onPressed: () {
@@ -454,12 +458,16 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                             height: 50,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                  side: const BorderSide(color: PaletaCores.corVermelho),
+                                  shadowColor: PaletaCores.corVermelho,
+                                  elevation: 10,
                                   shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  primary: Colors.red),
+                                          Radius.circular(30))),
+                                  primary: Colors.white),
                               child: Text(Textos.txtExcluir,
                                   style: const TextStyle(
+                                      color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20)),
                               onPressed: () {

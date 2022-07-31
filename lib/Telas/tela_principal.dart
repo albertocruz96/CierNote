@@ -21,7 +21,6 @@ class TelaPrincipal extends StatefulWidget {
 class _TelaPrincipalState extends State<TelaPrincipal> {
   List<TarefaModelo> tarefas = [];
   int quantidadeTarefas = 0;
-  bool exibirOpcaoCriarTarefa = true;
   String nomeUsuario = "Jhonatan";
   TimeOfDay? hora = const TimeOfDay(hour: 19, minute: 00);
   DateTime data = DateTime(2022, 07, 02);
@@ -61,37 +60,32 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     });
   }
 
+  // widget dos botoes utilizados em tela
   Widget botoes(double largura, double altura, String tituloBotao, Color cor) =>
       SizedBox(
         width: largura,
         height: altura,
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
+                side: BorderSide(color: cor),
                 shadowColor: cor,
                 elevation: 10,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(30))),
                 primary: Colors.white),
             onPressed: () {
+              // verificando se o nome do botao corresponde ao parametro passado
               if (tituloBotao == Textos.btnCriarTarefa) {
-                setState(() {
-                  exibirOpcaoCriarTarefa = false;
-                });
+                Navigator.pushReplacementNamed(
+                    context, Constantes.telaTarefaAdicao);
               } else if (tituloBotao == Textos.btnEmProgresso) {
                 Navigator.pushReplacementNamed(
                     context, Constantes.telaTarefaConcluidaProgresso,
                     arguments: Constantes.telaExibirProgresso);
-              } else if (tituloBotao == Textos.btnConcluido) {
+              } else {
                 Navigator.pushReplacementNamed(
                     context, Constantes.telaTarefaConcluidaProgresso,
                     arguments: Constantes.telaExibirConcluido);
-              } else if (tituloBotao == Textos.btnCriarTarefaTexto) {
-                Navigator.pushReplacementNamed(
-                    context, Constantes.telaTarefaAdicao);
-              } else {
-                setState(() {
-                  exibirOpcaoCriarTarefa = true;
-                });
               }
             },
             child: Column(
@@ -99,6 +93,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               children: [
                 LayoutBuilder(
                   builder: (context, constraints) {
+                    // verificando o nome do botao para exibir icone correspondente
                     if (tituloBotao == Textos.btnCriarTarefa) {
                       return const Icon(
                         Icons.list_alt_outlined,
@@ -114,18 +109,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                     } else if (tituloBotao == Textos.btnConcluido) {
                       return const Icon(
                         Icons.done,
-                        size: 40,
-                        color: Colors.black,
-                      );
-                    } else if (tituloBotao == Textos.btnCriarTarefaTexto) {
-                      return const Icon(
-                        Icons.text_snippet_outlined,
-                        size: 40,
-                        color: Colors.black,
-                      );
-                    } else if (tituloBotao == Textos.btnCriarTarefaLista) {
-                      return const Icon(
-                        Icons.list,
                         size: 40,
                         color: Colors.black,
                       );
@@ -233,10 +216,10 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                     children: [
                       Container(
                         width: larguraTela,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 10.0),
+                        margin: const EdgeInsets.only(
+                            right: 10.0, top: 0.0, bottom: 10.0, left: 10.0),
                         child: Card(
-                          elevation: 20,
+                          elevation: 10,
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15))),
@@ -295,68 +278,18 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                               SizedBox(
                                 height: 215,
                                 width: larguraTela,
-                                child: AnimatedCrossFade(
-                                    firstChild: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        botoes(120, 140, Textos.btnCriarTarefa,
-                                            PaletaCores.corVermelho),
-                                        botoes(120, 140, Textos.btnEmProgresso,
-                                            PaletaCores.corAmarela),
-                                        botoes(120, 140, Textos.btnConcluido,
-                                            PaletaCores.corVerde),
-                                      ],
-                                    ),
-                                    secondChild: SizedBox(
-                                      height: 200,
-                                      child: Card(
-                                        margin: const EdgeInsets.all(10),
-                                        elevation: 10,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(Textos.btnCriarTarefa,
-                                                style: const TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                //btn criar em texto
-                                                botoes(
-                                                    120,
-                                                    120,
-                                                    Textos.btnCriarTarefaTexto,
-                                                    PaletaCores
-                                                        .corAzulCianoClaro),
-                                                //btn fechar janela
-                                                botoes(
-                                                    90,
-                                                    30,
-                                                    Textos.btnFecharJanela,
-                                                    PaletaCores.corVermelho),
-                                                //btn criar em lista
-                                                botoes(
-                                                    120,
-                                                    120,
-                                                    Textos.btnCriarTarefaLista,
-                                                    PaletaCores
-                                                        .corAzulCianoClaro),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    crossFadeState: exibirOpcaoCriarTarefa
-                                        ? CrossFadeState.showFirst
-                                        : CrossFadeState.showSecond,
-                                    duration:
-                                        const Duration(milliseconds: 500)),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    botoes(120, 140, Textos.btnCriarTarefa,
+                                        PaletaCores.corVermelho),
+                                    botoes(120, 140, Textos.btnEmProgresso,
+                                        PaletaCores.corAmarela),
+                                    botoes(120, 140, Textos.btnConcluido,
+                                        PaletaCores.corVerde),
+                                  ],
+                                ),
                               )
                             ],
                           )),
