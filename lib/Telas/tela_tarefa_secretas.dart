@@ -82,7 +82,7 @@ class _TelaTarefasSecretasState extends State<TelaTarefasSecretas>
   // metodo responsavel por realizar as consultas ao banco de dados
   consultarTarefas() async {
     // chamando metodo responsavel por pegar a lista de tarefas
-    await Consulta.consultarTarefasBanco().then((value) {
+    await Consulta.consultarTarefasBanco(Constantes.nomeTabelaTarefas).then((value) {
       setState(() {
         //removendo elementos da lista que contenham os seguintes parametros
         value.removeWhere((element) =>

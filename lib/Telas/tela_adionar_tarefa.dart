@@ -81,7 +81,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
       BancoDeDados.columnTarefaNotificacao: false,
       BancoDeDados.columnTarefaSecreta: tarefaSecreta
     };
-    await bancoDados.inserir(linha);
+    await bancoDados.inserir(linha,Constantes.nomeTabelaTarefas);
   }
 
   // metodo para exibir alerta pedindo confirmacao para sair da tela
@@ -175,12 +175,16 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                      side: const BorderSide(color: PaletaCores.corVerde),
+                      shadowColor: PaletaCores.corVerde,
                       shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      primary: Colors.green),
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      primary: Colors.white),
                   child: Text(Textos.btnSalvar,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 20)),
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20)),
                   onPressed: () {
                     confirmacaoSairTela = true;
                     if (_chaveFormulario.currentState!.validate()) {

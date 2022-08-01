@@ -9,8 +9,8 @@ class Consulta {
   static BancoDeDados bancoDados = BancoDeDados.instance;
 
   //metodo para realizar a consulta no banco de dados
-  static Future<List<TarefaModelo>> consultarTarefasBanco() async {
-    final registros = await bancoDados.consultarLinhas();
+  static Future<List<TarefaModelo>> consultarTarefasBanco(String tabela) async {
+    final registros = await bancoDados.consultarLinhas(tabela);
     List<TarefaModelo> lista = [];
     for (var linha in registros) {
       dynamic cor = linha[Constantes.bancoCor];

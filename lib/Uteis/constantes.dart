@@ -1,5 +1,4 @@
 class Constantes {
-
   // constantes para a rota das telas
   static const String telaInicial = "/telaInicial";
   static const String telaTarefaAdicao = "/telaTarefaAdicao";
@@ -8,15 +7,20 @@ class Constantes {
   static const String telaTarefasSecretas = "/telaTarefaSecreta";
   static const String telaTarefaConcluidaProgresso =
       "/telaTarefaConcluidaProgresso";
+
+  static const String telaLixeira = "/telaLixeira";
   static const String telaExibirConcluido = "telaConcluida";
   static const String telaExibirProgresso = "telaProgresso";
   static const String telaParametroDetalhes = "detalhesTarefa";
+  static const String telaParametroTelaDetalhesComando = "comandoTela";
 
   static String horaSemPrazo = "Sem Horário";
   static String tarefaSecreta = "Tarefa Secreta";
+
   // constantes para o status da tarefa
   static const String statusEmProgresso = "Em Progresso";
   static const String statusConcluido = "Concluido";
+
   // constantes usadas nos pop ups na tela onde fica os detalhes da tarefa
   static const String popUpMenuEditar = "editar";
   static const String popUpMenuFavoritar = "favorito";
@@ -29,7 +33,8 @@ class Constantes {
 
   // constantes para o banco de dados sql lite
   static const nomeBanco = "tarefasBanco.db";
-  static const nomeTabela = 'tarefas';
+  static const nomeTabelaTarefas = 'tarefas';
+  static const nomeTabelaLixeira = 'lixeira';
   static const bancoId = 'id';
   static const bancoTitulo = 'titulo';
   static const bancoConteudo = 'conteudo';

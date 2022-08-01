@@ -76,7 +76,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
       BancoDeDados.columnTarefaFavorito: ativarFavorito,
       BancoDeDados.columnTarefaNotificacao: ativarNotificacao
     };
-    await bancoDados.atualizar(linha);
+    await bancoDados.atualizar(linha,Constantes.nomeTabelaTarefas);
   }
 
   chamarCancelarNotificacao() async {
@@ -89,8 +89,6 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
     if (widget.item.hora.toString().contains(Constantes.horaSemPrazo)) {
       tipoNotificacao = Constantes.tipoNotiPermanente;
     }
-    var dados = {};
-    dados["teste"] = Constantes.telaTarefaDetalhada;
     NotificacaoServico.chamarExibirNotificacao(
         NotificacaoModelo(
             id: widget.item.id,
@@ -117,8 +115,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
               TextButton(
                   onPressed: () {
                     chamarCancelarNotificacao();
-                    //chamando metodo para excluir passando como parametro o id
-                    bancoDados.excluir(widget.item.id);
+                    inserirDadosTabelaLixeira();
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(Textos.sucessoExclusaoTarefa)));
                     Navigator.pushReplacementNamed(
@@ -128,6 +125,23 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
             ],
           );
         });
+  }
+
+  // metodo para inserir os dados no banco de dados
+  inserirDadosTabelaLixeira() async {
+    // linha para incluir os dados
+    Map<String, dynamic> linha = {
+      BancoDeDados.columnTarefaTitulo: widget.item.titulo,
+      BancoDeDados.columnTarefaConteudo:widget.item.conteudo,
+      BancoDeDados.columnTarefaData: widget.item.data,
+      BancoDeDados.columnTarefaHora: widget.item.hora,
+      BancoDeDados.columnTarefaCor: widget.item.corTarefa.toString(),
+      BancoDeDados.columnTarefaStatus: widget.item.status,
+      BancoDeDados.columnTarefaFavorito: widget.item.favorito,
+      BancoDeDados.columnTarefaNotificacao: widget.item.notificacaoAtiva,
+      BancoDeDados.columnTarefaSecreta: widget.item.tarefaSecreta
+    };
+    int id = await bancoDados.inserir(linha,Constantes.nomeTabelaLixeira);
   }
 
   @override
@@ -156,6 +170,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                       //passando dados para a tela de edicao
                       var dadosTela = {};
                       dadosTela[Constantes.telaParametroDetalhes] = widget.item;
+                      dadosTela[Constantes.telaParametroTelaDetalhesComando] = "";
                       Navigator.pushReplacementNamed(
                           context, Constantes.telaTarefaEditar,
                           arguments: dadosTela);

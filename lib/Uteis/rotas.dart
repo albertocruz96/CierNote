@@ -1,4 +1,5 @@
 import 'package:ciernote/Telas/tela_editar_tarefa.dart';
+import 'package:ciernote/Telas/tela_lixeira.dart';
 import 'package:ciernote/Telas/tela_principal.dart';
 import 'package:ciernote/Telas/tela_adionar_tarefa.dart';
 import 'package:ciernote/Telas/tela_tarefa_concluida_progresso.dart';
@@ -18,6 +19,8 @@ class Rotas {
     switch (settings.name) {
       case Constantes.telaInicial:
         return MaterialPageRoute(builder: (_) => const TelaPrincipal());
+      case Constantes.telaLixeira:
+        return MaterialPageRoute(builder: (_) => const TelaLixeira());
       case Constantes.telaTarefasSecretas:
         return MaterialPageRoute(builder: (_) => const TelaTarefasSecretas());
       case Constantes.telaTarefaAdicao:

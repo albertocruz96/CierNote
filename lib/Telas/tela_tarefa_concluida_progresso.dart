@@ -46,7 +46,7 @@ class _TelaTarefaConcluidaProgressoState
   // metodo responsavel por realizar as consultas ao banco de dados
   consultarTarefas() async {
     // chamando metodo responsavel por pegar a lista de tarefas
-    await Consulta.consultarTarefasBanco().then((value) {
+    await Consulta.consultarTarefasBanco(Constantes.nomeTabelaTarefas).then((value) {
       setState(() {
         if (tipoConsulta == Constantes.statusEmProgresso) {
           value.removeWhere((element) =>

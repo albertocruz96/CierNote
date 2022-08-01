@@ -130,7 +130,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
       BancoDeDados.columnTarefaFavorito: false,
       BancoDeDados.columnTarefaSecreta: tarefaSecreta
     };
-    await bancoDados.atualizar(linha);
+    await bancoDados.atualizar(linha,Constantes.nomeTabelaTarefas);
   }
 
   // metodo para exibir alerta pedindo confirmacao para sair da tela

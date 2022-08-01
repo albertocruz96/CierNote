@@ -30,6 +30,9 @@ class Textos {
 
   static String txtBoasVindas = "Bom dia";
 
+  // Tela Lixeira
+  static String txtTelaLixeira = "Lixeira de Tarefas";
+
   // Tela criar e editar tarefa
   static String txtTelaCriarTarefa = "Criar Tarefa";
   static String txtTituloTarefa = "Titulo da tarefa: ";
@@ -58,7 +61,7 @@ class Textos {
 
   static String txtLegListaVaziaDataSelecionada =
       "Sem tarefas na data selecionada";
-  static String txtLegListaVazia = "Sem tarefas a serem realizadas";
+  static String txtLegListaVazia = "Sem tarefas";
   static String txtData = "Data";
   static String txtHora = "Hora";
   static String txtCor = "Cor";
