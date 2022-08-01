@@ -7,7 +7,7 @@ import 'package:ciernote/Uteis/constantes.dart';
 import 'package:ciernote/Telas/tela_tarefa_detalhada.dart';
 import 'package:flutter/material.dart';
 
-import '../Telas/tela_tarefa_secretas.dart';
+import '../Telas/tela_tarefa_secreta_favorito.dart';
 
 class Rotas {
   static GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
@@ -21,15 +21,24 @@ class Rotas {
         return MaterialPageRoute(builder: (_) => const TelaPrincipal());
       case Constantes.telaLixeira:
         return MaterialPageRoute(builder: (_) => const TelaLixeira());
-      case Constantes.telaTarefasSecretas:
-        return MaterialPageRoute(builder: (_) => const TelaTarefasSecretas());
+      case Constantes.telaTarefaSecretaFavorito:
+        if (args is String) {
+          return MaterialPageRoute(
+            builder: (_) => TelaTarefaSecretaFavorito(
+              tipoExibicao: args,
+            ),
+          );
+        }else {
+          return erroRota(settings);
+        }
       case Constantes.telaTarefaAdicao:
         return MaterialPageRoute(builder: (_) => const TelaAdionarTarefa());
       case Constantes.telaTarefaDetalhada:
         if (args is Map) {
           return MaterialPageRoute(
             builder: (_) => TarefaDetalhada(
-              item: args[Constantes.telaParametroDetalhes],
+              item: args[Constantes.parametroDetalhesTarefa],
+              comandoTelaLixeira: args[Constantes.parametroDetalhesComando],
             ),
           );
         } else {
@@ -39,7 +48,7 @@ class Rotas {
         if (args is Map) {
           return MaterialPageRoute(
             builder: (_) => TelaEditarTarefa(
-              item: args[Constantes.telaParametroDetalhes],
+              item: args[Constantes.parametroDetalhesTarefa],
             ),
           );
         } else {

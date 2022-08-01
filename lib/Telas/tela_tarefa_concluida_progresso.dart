@@ -216,6 +216,7 @@ class _TelaTarefaConcluidaProgressoState
                                   .map(
                                     (e) => TarefaWidget(
                                       item: e,
+                                      comandoTelaLixeira: false,
                                     ),
                                   )
                                   .toList()

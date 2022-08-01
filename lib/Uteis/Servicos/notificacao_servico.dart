@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 
 import '../../Modelo/notificacao_modelo.dart';
 import '../constantes.dart';
+import '../textos.dart';
 
 class NotificacaoServico {
   late FlutterLocalNotificationsPlugin localNotificationsPlugin;
@@ -93,7 +94,7 @@ class NotificacaoServico {
       String tipoNotificaco, NotificacaoModelo notificacaoModelo) async {
     // verificando se no campo especificado nao contem string
     // indicando que a notificacao sera sem horario
-    if (!notificacaoModelo.hora.toString().contains(Constantes.horaSemPrazo)) {
+    if (!notificacaoModelo.hora.toString().contains(Textos.horaSemPrazo)) {
       formatarDataHora(notificacaoModelo);
     }
     // variavel com os detalhes da notificacao

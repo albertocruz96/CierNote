@@ -1,11 +1,16 @@
+import 'dart:ui';
+
 import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:flutter/material.dart';
 import '../Uteis/constantes.dart';
 
 class TarefaWidget extends StatefulWidget {
-  const TarefaWidget({Key? key, required this.item}) : super(key: key);
+  const TarefaWidget(
+      {Key? key, required this.item, required this.comandoTelaLixeira})
+      : super(key: key);
 
   final TarefaModelo item;
+  final bool comandoTelaLixeira;
 
   @override
   State<TarefaWidget> createState() => _TarefaWidgetState();
@@ -14,7 +19,6 @@ class TarefaWidget extends StatefulWidget {
 class _TarefaWidgetState extends State<TarefaWidget> {
   @override
   Widget build(BuildContext context) {
-    double larguraTela = MediaQuery.of(context).size.width;
     return Container(
         margin: const EdgeInsets.all(5),
         width: 220,
@@ -26,7 +30,9 @@ class _TarefaWidgetState extends State<TarefaWidget> {
             ),
             onPressed: () {
               var dadosTela = {};
-              dadosTela[Constantes.telaParametroDetalhes] = widget.item;
+              dadosTela[Constantes.parametroDetalhesTarefa] = widget.item;
+              dadosTela[Constantes.parametroDetalhesComando] =
+                  widget.comandoTelaLixeira;
               Navigator.popAndPushNamed(context, Constantes.telaTarefaDetalhada,
                   arguments: dadosTela);
             },
@@ -47,8 +53,8 @@ class _TarefaWidgetState extends State<TarefaWidget> {
                   ),
                   Expanded(
                     flex: 1,
-                    child: SizedBox(
-                      width: larguraTela,
+                    child: Visibility(
+                      visible: !widget.item.tarefaSecreta,
                       child: Text(widget.item.conteudo,
                           textAlign: TextAlign.center,
                           style: const TextStyle(

@@ -199,7 +199,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                             content: Text(Textos.sucessoAdicaoTarefa)));
                         if (tarefaSecreta) {
                           Navigator.pushReplacementNamed(
-                              context, Constantes.telaTarefasSecretas);
+                              context, Constantes.telaTarefaSecretaFavorito);
                         } else {
                           Navigator.pushReplacementNamed(
                               context, Constantes.telaInicial);
@@ -352,7 +352,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(Constantes.tarefaSecreta),
+                                      Text(Textos.tarefaSecreta),
                                       Switch(
                                           value: tarefaSecreta,
                                           activeColor:
@@ -361,7 +361,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                             setState(() {
                                               tarefaSecreta = value;
                                               horaFormatada =
-                                                  Constantes.horaSemPrazo;
+                                                  Textos.horaSemPrazo;
                                             });
                                           }),
                                     ],
@@ -453,7 +453,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Text(Constantes.horaSemPrazo),
+                                            Text(Textos.horaSemPrazo),
                                             Switch(
                                                 value: exibirDefinirHora,
                                                 activeColor: PaletaCores
@@ -462,7 +462,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                                                   setState(() {
                                                     exibirDefinirHora = value;
                                                     horaFormatada =
-                                                        Constantes.horaSemPrazo;
+                                                        Textos.horaSemPrazo;
                                                     // redefindo valor da variavel ao desativar o switch
                                                     if (!exibirDefinirHora) {
                                                       horaFormatada = hora;

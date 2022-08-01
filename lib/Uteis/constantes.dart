@@ -4,18 +4,18 @@ class Constantes {
   static const String telaTarefaAdicao = "/telaTarefaAdicao";
   static const String telaTarefaDetalhada = "/telaTarefaDetalhada";
   static const String telaTarefaEditar = "/telaTarefaEdicao";
-  static const String telaTarefasSecretas = "/telaTarefaSecreta";
+  static const String telaTarefaSecretaFavorito = "/telaTarefaSecretaFavorito";
   static const String telaTarefaConcluidaProgresso =
       "/telaTarefaConcluidaProgresso";
-
   static const String telaLixeira = "/telaLixeira";
+
+  // constantes de parametros passsados para as telas
   static const String telaExibirConcluido = "telaConcluida";
   static const String telaExibirProgresso = "telaProgresso";
-  static const String telaParametroDetalhes = "detalhesTarefa";
-  static const String telaParametroTelaDetalhesComando = "comandoTela";
-
-  static String horaSemPrazo = "Sem Horário";
-  static String tarefaSecreta = "Tarefa Secreta";
+  static const String parametroDetalhesTarefa = "detalhesTarefa";
+  static const String parametroDetalhesComando = "comandoTela";
+  static const String telaExibirTarefaSecreta = "tarefaSecreta";
+  static const String telaExibirTarefaFavorito = "tarefaFavorito";
 
   // constantes para o status da tarefa
   static const String statusEmProgresso = "Em Progresso";

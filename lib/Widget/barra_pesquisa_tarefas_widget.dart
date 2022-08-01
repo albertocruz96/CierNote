@@ -79,8 +79,9 @@ class PesquisaTarefasWidget extends SearchDelegate {
                     selected: false,
                     onSelectChanged: (newValue) {
                       var dadosTela = {};
-                      dadosTela[Constantes.telaParametroDetalhes] =
+                      dadosTela[Constantes.parametroDetalhesTarefa] =
                           item;
+                      dadosTela[Constantes.parametroDetalhesComando] = false;
                       Navigator.pushReplacementNamed(
                           context, Constantes.telaTarefaDetalhada,
                           arguments: dadosTela);

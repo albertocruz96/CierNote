@@ -5,9 +5,6 @@ class Textos {
   static String btnConcluido = "Conclúido";
   static String btnEmProgresso = "Em Progresso";
   static String btnCriarTarefa = "Criar Tarefa";
-  static String btnCriarTarefaTexto = "Em texto";
-  static String btnCriarTarefaLista = "Em Lista";
-  static String btnNotasOcultas = "Notas Secretas";
   static String btnLiberarAcesso = "Liberar Acesso";
   static String btnTentarNovamente = "Tentar Novamente";
   static String btnFecharJanela = "Fechar";
@@ -18,11 +15,21 @@ class Textos {
   static String btnFavoritos = "Favoritos";
   static String btnVerLista = "Ver em Lista";
   static String btnVerGrade = "Ver em Grade";
+  static String btnMoverLixeira = "Mover para Lixeira";
+  static String btnRestaurarLixeira = "Restaurar Tarefa";
+  static String btnExcluir = "Excluir";
+  static String btnTarefasSecretas = "Tarefa Secretas";
+
+  static String txtTelaFavorito = "Tarefas favoritas";
 
   static String txtLegMenuLateral = "Menu Lateral";
 
+  // String da tela de bloqueio de tarefas secretas
   static String txtLiberarSenhaHint = "A senha da sua conta";
-  static String txtLegLiberarAcesso = "É necessário autenticar - se para liberar o acesso a está tela";
+  static String txtLegLiberarAcesso =
+      "É necessário autenticar - se para liberar o acesso a está tela";
+  static String txtLegAutenticacao =
+      "Por favor,autentique-se para acessar as tarefas secretas";
 
   // Tela principal
   static String txtLegBarraBusca = "Pesquise sua tarefa por aqui";
@@ -35,11 +42,10 @@ class Textos {
 
   // Tela criar e editar tarefa
   static String txtTelaCriarTarefa = "Criar Tarefa";
+  static String txtTelaEdicao = "Editar Tarefa";
   static String txtTituloTarefa = "Titulo da tarefa: ";
   static String txtTituloTarefaHint = "insira o titulo da tarefa";
-
   static String txtMudarStatus = "Mudar status para Em Progresso";
-
   static String txtDescricaoTarefa = "Descrição:";
   static String txtDescricaoTarefaHint =
       "insira a descrição da sua tarefa aqui";
@@ -48,9 +54,6 @@ class Textos {
   static String txtTelaDetalhes = "Tarefa Detalhada";
   static String txtStatus = "Status: ";
 
-  // Tela Edicao
-  static String txtTelaEdicao = "Editar Tarefa";
-
   // String tela TAREFA CONCLUIDA
   static String txtTelaTarefaConcluida = "Tarefas Concluidas";
 
@@ -58,22 +61,20 @@ class Textos {
   static String txtTelaTarefaProgresso = "Tarefas Em Progresso";
 
   // Strings GERAIS
-
   static String txtLegListaVaziaDataSelecionada =
       "Sem tarefas na data selecionada";
   static String txtLegListaVazia = "Sem tarefas";
   static String txtData = "Data";
   static String txtHora = "Hora";
   static String txtCor = "Cor";
-  static String txtExcluir = "Excluir";
   static String txtLegendaData = "Selecione uma data para filtrar as tarefas";
+  static String horaSemPrazo = "Sem Horário";
+
+  static String tarefaSecreta = "Tarefa Secreta";
 
   // String Alert Dialog
   static String txtTituloAlertaSair = "Deseja sair sem salvar ? ";
   static String txtTituloAlertaExclusao = "Deseja excluir esta tarefa ? ";
-
-  static String txtLegAutenticacao =
-      "Por favor,autentique-se para acessar as tarefas secretas";
 
   // String de retorno ao usuario ERRO e SUCESSO
   static String sucessoAdicaoFavorito = "Tarefa adionada aos favoritos";
@@ -85,6 +86,9 @@ class Textos {
   static String sucessoConcluidoTarefa = "Tarefa marcada como conclúida.";
   static String sucessoEditarTarefa = "Sucesso ao Editar Tarefa";
   static String sucessoExclusaoTarefa = "Sucesso ao excluir tarefa";
+  static String sucessoRestaurarTarefa = "Sucesso ao restaurar a tarefa";
+  static String sucessoMoverTarefaLixeira =
+      "Sucesso ao mover a tarefa para a lixeira";
   static String erroCampoVazio = "Digite algo nos campos";
   static String erroCorSelecionada = "Selecione uma cor para a tarefa";
 }

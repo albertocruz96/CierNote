@@ -70,7 +70,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
     DateTime? converterHora;
     //verificando se o horario gravado no banco contem determinado texto para exibir
     // ou nao o campo
-    if (widget.item.hora.toString().contains(Constantes.horaSemPrazo)) {
+    if (widget.item.hora.toString().contains(Textos.horaSemPrazo)) {
       setState(() {
         exibirDefinirHora = true;
       });
@@ -247,7 +247,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                             content: Text(Textos.sucessoEditarTarefa)));
                         if (tarefaSecreta) {
                           Navigator.pushReplacementNamed(
-                              context, Constantes.telaTarefasSecretas);
+                              context, Constantes.telaTarefaSecretaFavorito);
                         } else {
                           Navigator.pushReplacementNamed(
                               context, Constantes.telaInicial);
@@ -423,7 +423,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text(Constantes.tarefaSecreta),
+                                          Text(Textos.tarefaSecreta),
                                           Switch(
                                               value: tarefaSecreta,
                                               activeColor:
@@ -432,7 +432,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                                                 setState(() {
                                                   tarefaSecreta = value;
                                                   horaFormatada =
-                                                      Constantes.horaSemPrazo;
+                                                      Textos.horaSemPrazo;
                                                   // redefindo valor da variavel ao desativar o switch
                                                   if (!exibirDefinirHora) {
                                                     horaFormatada = hora;
@@ -530,7 +530,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Text(Constantes.horaSemPrazo),
+                                            Text(Textos.horaSemPrazo),
                                             Switch(
                                                 value: exibirDefinirHora,
                                                 activeColor: PaletaCores
@@ -539,7 +539,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                                                   setState(() {
                                                     exibirDefinirHora = value;
                                                     horaFormatada =
-                                                        Constantes.horaSemPrazo;
+                                                        Textos.horaSemPrazo;
                                                     // redefindo valor da variavel ao desativar o switch
                                                     if (!exibirDefinirHora) {
                                                       horaFormatada = hora;

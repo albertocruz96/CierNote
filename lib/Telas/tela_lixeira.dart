@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../Modelo/tarefa_modelo.dart';
 import '../Uteis/constantes.dart';
 import '../Uteis/consulta_banco_dados.dart';
-import '../Uteis/paleta_cores.dart';
 import '../Widget/tarefa_widget.dart';
 
 class TelaLixeira extends StatefulWidget {
@@ -81,6 +80,7 @@ class _TelaLixeiraState extends State<TelaLixeira> {
                                   (e) =>
                                   TarefaWidget(
                                     item: e,
+                                    comandoTelaLixeira: true,
                                   ),
                             )
                                 .toList()

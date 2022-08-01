@@ -42,7 +42,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 // no banco de dados e exibir ao usuario ordenando pela data
   consultarTarefas() async {
     // chamando metodo responsavel por pegar os itens no banco de dados
-    await Consulta.consultarTarefasBanco(Constantes.nomeTabelaTarefas).then((value) {
+    await Consulta.consultarTarefasBanco(Constantes.nomeTabelaTarefas)
+        .then((value) {
       setState(() {
         tarefas = value;
         // removendo itens da lista que corresponde aos criterios passados
@@ -151,11 +152,11 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 ListTile(
                   leading: const Icon(Icons.lock,
                       size: 25, color: PaletaCores.corAzulCianoClaro),
-                  title: Text(Textos.btnNotasOcultas,
+                  title: Text(Textos.btnTarefasSecretas,
                       style: const TextStyle(fontSize: 18)),
                   onTap: () {
                     Navigator.popAndPushNamed(
-                        context, Constantes.telaTarefasSecretas);
+                        context, Constantes.telaTarefaSecretaFavorito,arguments: Constantes.telaExibirTarefaSecreta);
                   },
                 ),
                 ListTile(
@@ -164,7 +165,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   title: Text(Textos.btnFavoritos,
                       style: const TextStyle(fontSize: 18)),
                   onTap: () {
-
+                    Navigator.popAndPushNamed(
+                        context, Constantes.telaTarefaSecretaFavorito,arguments: Constantes.telaTarefaSecretaFavorito);
                   },
                 ),
                 ListTile(
@@ -173,8 +175,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   title: Text(Textos.btnLixeira,
                       style: const TextStyle(fontSize: 18)),
                   onTap: () {
-                    Navigator.popAndPushNamed(
-                        context, Constantes.telaLixeira);
+                    Navigator.popAndPushNamed(context, Constantes.telaLixeira);
                   },
                 ),
               ],
