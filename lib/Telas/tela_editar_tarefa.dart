@@ -20,7 +20,8 @@ class TelaEditarTarefa extends StatefulWidget {
 
 class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
   DateTime data = DateTime(2022, 07, 02);
-  TimeOfDay? hora = const TimeOfDay(hour: 19, minute: 00);
+  TimeOfDay? hora = TimeOfDay.now();
+  late dynamic hora2;
   dynamic horaFormatada;
   dynamic corSelecionada = Colors.black;
   bool exibirDefinirHora = false;

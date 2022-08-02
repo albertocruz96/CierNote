@@ -27,9 +27,9 @@ class _TelaTarefaSecretaFavoritoState extends State<TelaTarefaSecretaFavorito> {
   void initState() {
     super.initState();
     consultarTarefas(); // chamando metodo
-    if(widget.tipoExibicao.contains(Constantes.telaExibirTarefaSecreta)){
+    if (widget.tipoExibicao.contains(Constantes.telaExibirTarefaSecreta)) {
       nomeTela = Textos.btnTarefasSecretas;
-    }else{
+    } else {
       nomeTela = Textos.txtTelaFavorito;
     }
   }
@@ -41,10 +41,20 @@ class _TelaTarefaSecretaFavoritoState extends State<TelaTarefaSecretaFavorito> {
         .then((value) {
       setState(() {
         //removendo elementos da lista que contenham os seguintes parametros
-        value.removeWhere((element) =>
-            (element.status == Constantes.statusConcluido ||
-                element.status == Constantes.statusEmProgresso) &&
-            element.tarefaSecreta == false);
+        if (widget.tipoExibicao.contains(Constantes.telaExibirTarefaSecreta)) {
+          // removendo todos os elementos que contem o status concluido
+          // ou em progresso que contenham o campo tarefa secreta como FALSE
+          value.removeWhere((element) =>
+              (element.status == Constantes.statusConcluido ||
+                  element.status == Constantes.statusEmProgresso) &&
+              element.tarefaSecreta == false);
+        }else{
+          // removendo todos os elementos que contem o status concluido
+          // ou em progresso que contenham o campo tarefa secreta como TRUE
+          value.removeWhere((element) =>
+          element.status == Constantes.statusConcluido ||
+              element.status == Constantes.statusEmProgresso && (element.tarefaSecreta == true || !element.favorito));
+        }
         listaTarefas = value;
       });
     });

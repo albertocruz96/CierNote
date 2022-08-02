@@ -156,7 +156,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       style: const TextStyle(fontSize: 18)),
                   onTap: () {
                     Navigator.popAndPushNamed(
-                        context, Constantes.telaTarefaSecretaFavorito,arguments: Constantes.telaExibirTarefaSecreta);
+                        context, Constantes.telaTarefaSecretaFavorito,
+                        arguments: Constantes.telaExibirTarefaSecreta);
                   },
                 ),
                 ListTile(
@@ -166,7 +167,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       style: const TextStyle(fontSize: 18)),
                   onTap: () {
                     Navigator.popAndPushNamed(
-                        context, Constantes.telaTarefaSecretaFavorito,arguments: Constantes.telaTarefaSecretaFavorito);
+                        context, Constantes.telaTarefaSecretaFavorito,
+                        arguments: Constantes.telaTarefaSecretaFavorito);
                   },
                 ),
                 ListTile(

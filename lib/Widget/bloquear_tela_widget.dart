@@ -22,6 +22,7 @@ class _BloquearTelaWidgetState extends State<BloquearTelaWidget>
   bool bloquearTela = true;
   bool biometriaDisponivel = false;
   final ValueNotifier<bool> autenticacaoFalha = ValueNotifier(false);
+  bool autenticacao = false;
 
   // metodo para verificar identidade usando a biometria
   autenticarBiometria() async {
@@ -48,6 +49,7 @@ class _BloquearTelaWidgetState extends State<BloquearTelaWidget>
       biometriaDisponivel = false;
     }
   }
+
 
   @override
   void initState() {

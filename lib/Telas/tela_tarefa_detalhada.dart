@@ -142,12 +142,10 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                       // inserindo dados na tabela
                       inserirDadosTabela(Constantes.nomeTabelaLixeira);
                       // definindo um timer para excluir os dados da tabela apos inserir na outra tabela
-                      Timer(const Duration(seconds: 1), () {
-                        bancoDados.excluir(
-                            widget.item.id, Constantes.nomeTabelaTarefas);
-                        Navigator.pushReplacementNamed(
-                            context, Constantes.telaLixeira);
-                      });
+                      bancoDados.excluir(
+                          widget.item.id, Constantes.nomeTabelaTarefas);
+                      Navigator.pushReplacementNamed(
+                          context, Constantes.telaLixeira);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(Textos.sucessoMoverTarefaLixeira)));
                     }
@@ -171,7 +169,7 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
       BancoDeDados.columnTarefaCor: widget.item.corTarefa.toString(),
       BancoDeDados.columnTarefaStatus: widget.item.status,
       BancoDeDados.columnTarefaFavorito: widget.item.favorito,
-      BancoDeDados.columnTarefaNotificacao: widget.item.notificacaoAtiva,
+      BancoDeDados.columnTarefaNotificacao: false,
       BancoDeDados.columnTarefaSecreta: widget.item.tarefaSecreta
     };
     await bancoDados.inserir(linha, tabela);
@@ -204,13 +202,11 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                   arguments: Constantes.telaExibirConcluido);
             } else {
               inserirDadosTabela(Constantes.nomeTabelaTarefas);
-              Timer(const Duration(seconds: 1), () {
-                bancoDados.excluir(
-                    widget.item.id, Constantes.nomeTabelaLixeira);
-                Navigator.pushReplacementNamed(context, Constantes.telaInicial);
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(Textos.sucessoRestaurarTarefa)));
-              });
+              bancoDados.excluir(
+                  widget.item.id, Constantes.nomeTabelaLixeira);
+              Navigator.pushReplacementNamed(context, Constantes.telaInicial);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(Textos.sucessoRestaurarTarefa)));
             }
           },
           child: Text(
@@ -549,8 +545,8 @@ class _TarefaDetalhadaState extends State<TarefaDetalhada> {
                 ))),
         onWillPop: () async {
           if (widget.item.tarefaSecreta && !widget.comandoTelaLixeira) {
-            Navigator.popAndPushNamed(context, Constantes.telaTarefaSecretaFavorito);
-          } else if (widget.comandoTelaLixeira) {
+            Navigator.popAndPushNamed(context, Constantes.telaTarefaSecretaFavorito,arguments: Constantes.telaExibirTarefaSecreta);
+          }else if (widget.comandoTelaLixeira) {
             Navigator.popAndPushNamed(context, Constantes.telaLixeira);
           } else {
             Navigator.popAndPushNamed(context, Constantes.telaInicial);

@@ -17,7 +17,7 @@ class TelaAdionarTarefa extends StatefulWidget {
 
 class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
   DateTime data = DateTime.now();
-  TimeOfDay? hora = TimeOfDay.now();
+  late dynamic hora;
   dynamic horaFormatada;
   dynamic corSelecionada = Colors.black;
   bool exibirDefinirHora = false;
@@ -49,7 +49,15 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
   @override
   void initState() {
     super.initState();
+    // pegando a hora no formato 24 horas e adicionando 30 minutos ao horario atual do aparelho
+    String horaComAdicao = DateFormat('kk:mm').format(data.add(const Duration(minutes: 30)));
+    // dividindo string conforme parametro passado
+    List<String> dividirStringHora = horaComAdicao.split(":");
+    int hour = int.parse(dividirStringHora.first);
+    int minute = int.parse(dividirStringHora.last);
+    hora = TimeOfDay(hour: hour, minute: minute);
     formatarHora();
+
   }
 
   // lista com as cores para o usuario selecionar
@@ -199,7 +207,7 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
                             content: Text(Textos.sucessoAdicaoTarefa)));
                         if (tarefaSecreta) {
                           Navigator.pushReplacementNamed(
-                              context, Constantes.telaTarefaSecretaFavorito);
+                              context, Constantes.telaTarefaSecretaFavorito,arguments: Constantes.telaExibirTarefaSecreta);
                         } else {
                           Navigator.pushReplacementNamed(
                               context, Constantes.telaInicial);
