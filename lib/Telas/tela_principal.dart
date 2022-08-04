@@ -2,10 +2,12 @@ import 'package:ciernote/Uteis/consulta_banco_dados.dart';
 import 'package:ciernote/Modelo/tarefa_modelo.dart';
 import 'package:ciernote/Uteis/constantes.dart';
 import 'package:ciernote/Uteis/paleta_cores.dart';
+import 'package:ciernote/Widget/dados_usuario_widget.dart';
 import 'package:ciernote/Widget/listagem_tela_principal_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Uteis/Servicos/notificacao_servico.dart';
+import '../Uteis/banco_de_dados.dart';
 import '../Uteis/textos.dart';
 import 'package:intl/intl.dart';
 
@@ -21,15 +23,34 @@ class TelaPrincipal extends StatefulWidget {
 class _TelaPrincipalState extends State<TelaPrincipal> {
   List<TarefaModelo> tarefas = [];
   int quantidadeTarefas = 0;
-  String nomeUsuario = "Jhonatan";
+  String nomeUsuario = Textos.usuarioConvidado;
+  bool ativarTelaUsuario = false;
   TimeOfDay? hora = const TimeOfDay(hour: 19, minute: 00);
   DateTime data = DateTime(2022, 07, 02);
+
+  // referencia classe para gerenciar o banco de dados
+  final bancoDados = BancoDeDados.instance;
 
   @override
   void initState() {
     super.initState();
     consultarTarefas(); // chamando metodo
     checarNotificacao();
+    consultarUsuario();
+  }
+
+  consultarUsuario() async {
+    final registros =
+        await bancoDados.consultarLinhas(Constantes.nomeTabelaUsuario);
+    if (registros.isNotEmpty) {
+      for (var linha in registros) {
+        setState(() {
+          nomeUsuario = linha[Constantes.bancoNomeUsuario];
+        });
+      }
+    } else {
+      nomeUsuario = Textos.usuarioConvidado;
+    }
   }
 
   // metodo responsavel por verificar as notificacoes
@@ -200,7 +221,11 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 height: 40,
                 child: FloatingActionButton(
                   backgroundColor: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      ativarTelaUsuario = true;
+                    });
+                  },
                   child: const Icon(
                     Icons.account_circle,
                     size: 30,
@@ -211,15 +236,14 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
             ],
           ),
           body: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-            },
-            child: Container(
+              onTap: () {
+                FocusScope.of(context).requestFocus(FocusNode());
+              },
+              child: Container(
                 color: Colors.white,
                 width: larguraTela,
                 height: alturaTela,
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
                   child: Column(
                     children: [
                       Container(
@@ -256,55 +280,89 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                          width: larguraTela,
+                      AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 500),
+                        firstChild: SizedBox(
+                            width: larguraTela,
+                            height: 300,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  width: larguraTela,
+                                  height: 70,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "${Textos.txtBoasVindas} $nomeUsuario",
+                                        style: const TextStyle(
+                                            color:
+                                                PaletaCores.corCinzaMenosClaro,
+                                            fontSize: 20),
+                                      ),
+                                      Text(
+                                        "Você tem $quantidadeTarefas tarefas a serem realizadas",
+                                        style: const TextStyle(fontSize: 20),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                SizedBox(
+                                  height: 215,
+                                  width: larguraTela,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      botoes(120, 140, Textos.btnCriarTarefa,
+                                          PaletaCores.corVermelho),
+                                      botoes(120, 140, Textos.btnEmProgresso,
+                                          PaletaCores.corAmarela),
+                                      botoes(120, 140, Textos.btnConcluido,
+                                          PaletaCores.corVerde),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )),
+                        secondChild: SizedBox(
                           height: 300,
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: larguraTela,
-                                height: 70,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "${Textos.txtBoasVindas} $nomeUsuario",
-                                      style: const TextStyle(
-                                          color: PaletaCores.corCinzaMenosClaro,
-                                          fontSize: 20),
-                                    ),
-                                    Text(
-                                      "Você tem $quantidadeTarefas tarefas a serem realizadas",
-                                      style: const TextStyle(fontSize: 20),
-                                    ),
-                                  ],
+                                height: 40,
+                                width: 40,
+                                child: FloatingActionButton(
+                                  backgroundColor: PaletaCores.corVermelho,
+                                  heroTag: "btnFechar",
+                                  onPressed: () {
+                                    consultarUsuario();
+                                    setState(() {
+                                      ativarTelaUsuario = false;
+                                    });
+                                  },
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(
-                                height: 10.0,
-                              ),
-                              SizedBox(
-                                height: 215,
-                                width: larguraTela,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    botoes(120, 140, Textos.btnCriarTarefa,
-                                        PaletaCores.corVermelho),
-                                    botoes(120, 140, Textos.btnEmProgresso,
-                                        PaletaCores.corAmarela),
-                                    botoes(120, 140, Textos.btnConcluido,
-                                        PaletaCores.corVerde),
-                                  ],
-                                ),
-                              )
+                              const DadosUsuarioWidget()
                             ],
-                          )),
+                          ),
+                        ),
+                        crossFadeState: ativarTelaUsuario
+                            ? CrossFadeState.showSecond
+                            : CrossFadeState.showFirst,
+                      ),
                     ],
                   ),
-                )),
-          ),
+                ),
+              )),
           bottomNavigationBar: GestureDetector(
               onTap: () {
                 FocusScope.of(context).requestFocus(FocusNode());

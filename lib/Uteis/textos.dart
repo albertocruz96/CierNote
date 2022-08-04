@@ -12,6 +12,7 @@ class Textos {
   static String btnVerTodasTarefa = "Ver tudo";
   static String btnSalvar = "Salvar";
   static String btnAtualizar = "Atualizar";
+  static String btnAtualizarUsuario = "Atualizar Usuario";
   static String btnFavoritos = "Favoritos";
   static String btnVerLista = "Ver em Lista";
   static String btnVerGrade = "Ver em Grade";
@@ -36,6 +37,12 @@ class Textos {
   static String txtLegTarefas = "Todas as tarefas";
 
   static String txtBoasVindas = "Bom dia";
+  static String usuarioConvidado = "Convidado";
+
+  // tela dados usuario
+  static String txtTelaUsuarioLeg = "Dados do Usuario";
+  static String labelUsuarioNome = "Nome de usuario";
+  static String labelUsuarioSenha = "Senha";
 
   // Tela Lixeira
   static String txtTelaLixeira = "Lixeira de Tarefas";
@@ -82,6 +89,8 @@ class Textos {
   static String sucessoAtivarNotificacao = "Notificacao da tarefa ativada";
   static String sucessoDesativarNotificacao =
       "Notificacao da tarefa desativada";
+  static String sucessoSalvarUsuario = "Sucesso ao salvar usuario e senha";
+  static String sucessoExclusaoUsuario = "Sucesso ao excluir usuario e senha";
   static String sucessoAdicaoTarefa = "Sucesso ao criar Tarefa";
   static String sucessoConcluidoTarefa = "Tarefa marcada como conclúida.";
   static String sucessoEditarTarefa = "Sucesso ao Editar Tarefa";
@@ -89,6 +98,8 @@ class Textos {
   static String sucessoRestaurarTarefa = "Sucesso ao restaurar a tarefa";
   static String sucessoMoverTarefaLixeira =
       "Sucesso ao mover a tarefa para a lixeira";
+  static String erroSemUsuario = "Cadastre um usuario e senha para salvar a tarefa secreta";
+  static String erroSenhaIncorreta = "Senha Incorreta";
   static String erroCampoVazio = "Digite algo nos campos";
   static String erroCorSelecionada = "Selecione uma cor para a tarefa";
 }

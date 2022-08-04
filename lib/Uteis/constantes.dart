@@ -35,6 +35,10 @@ class Constantes {
   static const nomeBanco = "tarefasBanco.db";
   static const nomeTabelaTarefas = 'tarefas';
   static const nomeTabelaLixeira = 'lixeira';
+  static const nomeTabelaUsuario = "usuario";
+
+  static const bancoNomeUsuario = "nomeUsuario";
+  static const bancoSenha = "senhaUsuario";
   static const bancoId = 'id';
   static const bancoTitulo = 'titulo';
   static const bancoConteudo = 'conteudo';

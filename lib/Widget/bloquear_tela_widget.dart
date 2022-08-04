@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../Uteis/Servicos/autenticacao_local_servico.dart';
+import '../Uteis/banco_de_dados.dart';
+import '../Uteis/constantes.dart';
 import '../Uteis/paleta_cores.dart';
 import '../Uteis/textos.dart';
 
@@ -24,6 +26,11 @@ class _BloquearTelaWidgetState extends State<BloquearTelaWidget>
   final ValueNotifier<bool> autenticacaoFalha = ValueNotifier(false);
   bool autenticacao = false;
 
+  // referencia classe para gerenciar o banco de dados
+  final bancoDados = BancoDeDados.instance;
+  TextEditingController controllerSenha = TextEditingController(text: "");
+  String senhaUsuario = "";
+
   // metodo para verificar identidade usando a biometria
   autenticarBiometria() async {
     final autenticacao =
@@ -31,6 +38,7 @@ class _BloquearTelaWidgetState extends State<BloquearTelaWidget>
     final verificarDisponibilidadeBiometria =
         await autenticacao.verificarBiometriaDisponivel();
     autenticacaoFalha.value = false;
+
     //verificando se o dispositivo tem biometria
     if (verificarDisponibilidadeBiometria) {
       biometriaDisponivel = true;
@@ -50,12 +58,24 @@ class _BloquearTelaWidgetState extends State<BloquearTelaWidget>
     }
   }
 
+  consultarUsuario() async {
+    final registros =
+        await bancoDados.consultarLinhas(Constantes.nomeTabelaUsuario);
+    if (registros.isNotEmpty) {
+      for (var linha in registros) {
+        setState(() {
+          senhaUsuario = linha[Constantes.bancoSenha];
+        });
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     // verificando se a tarefa e um tarefa secreta para exibir autenticacao
+    consultarUsuario();
     if (widget.item.tarefaSecreta) {
       autenticarBiometria();
     } else {
@@ -106,9 +126,14 @@ class _BloquearTelaWidgetState extends State<BloquearTelaWidget>
             if (tituloBotao == Textos.btnTentarNovamente) {
               autenticarBiometria(); // chamando metodo
             } else {
-              setState(() {
-                bloquearTela = false;
-              });
+              if (controllerSenha.text == senhaUsuario) {
+                setState(() {
+                  bloquearTela = false;
+                });
+              }else{
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(Textos.erroSenhaIncorreta)));
+              }
             }
           },
           child: Text(
@@ -168,6 +193,8 @@ class _BloquearTelaWidgetState extends State<BloquearTelaWidget>
                                         return null;
                                       },
                                       maxLines: 1,
+                                      controller: controllerSenha,
+                                      obscureText: true,
                                       keyboardType: TextInputType.text,
                                       decoration: InputDecoration(
                                         label: Text(Textos.txtLiberarSenhaHint),

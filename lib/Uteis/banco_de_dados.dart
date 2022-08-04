@@ -9,7 +9,10 @@ class BancoDeDados {
   static const bancoDadosVersao = 1;
   static const tabelaTarefas = Constantes.nomeTabelaTarefas;
   static const tabelaLixeira = Constantes.nomeTabelaLixeira;
+  static const tabelaUsuario = Constantes.nomeTabelaUsuario;
   static const columnId = Constantes.bancoId;
+  static const columnUsuarioNome = Constantes.bancoNomeUsuario;
+  static const columnUsuarioSenha = Constantes.bancoSenha;
   static const columnTarefaTitulo = Constantes.bancoTitulo;
   static const columnTarefaConteudo = Constantes.bancoConteudo;
   static const columnTarefaCor = Constantes.bancoCor;
@@ -70,6 +73,13 @@ class BancoDeDados {
             $columnTarefaFavorito BIT NOT NULL,
             $columnTarefaNotificacao BIT NOT NULL,
             $columnTarefaSecreta BIT NOT NULL
+          )
+          ''');
+    await db.execute('''
+          CREATE TABLE $tabelaUsuario (
+            $columnId INTEGER PRIMARY KEY,
+            $columnUsuarioNome TEXT NOT NULL,
+            $columnUsuarioSenha TEXT NOT NULL
           )
           ''');
   }

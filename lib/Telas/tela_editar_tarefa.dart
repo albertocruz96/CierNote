@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../Modelo/tarefa_modelo.dart';
 import '../Uteis/constantes.dart';
 import '../Uteis/textos.dart';
+import '../Widget/bloquear_tela_widget.dart';
 
 class TelaEditarTarefa extends StatefulWidget {
   const TelaEditarTarefa({Key? key, required this.item}) : super(key: key);
@@ -248,7 +249,7 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                             content: Text(Textos.sucessoEditarTarefa)));
                         if (tarefaSecreta) {
                           Navigator.pushReplacementNamed(
-                              context, Constantes.telaTarefaSecretaFavorito);
+                              context, Constantes.telaTarefaSecretaFavorito,arguments: Constantes.telaExibirTarefaSecreta);
                         } else {
                           Navigator.pushReplacementNamed(
                               context, Constantes.telaInicial);
@@ -270,24 +271,305 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                     left: 10.0, bottom: 0.0, right: 10.0, top: 10.0),
                 width: larguraTela,
                 height: alturaTela,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Form(
-                    key: _chaveFormulario,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 80,
-                          child: Row(
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Form(
+                          key: _chaveFormulario,
+                          child: Column(
                             children: [
-                              Text(Textos.txtTituloTarefa,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold)),
                               SizedBox(
-                                width: larguraTela * 0.55,
+                                height: 80,
+                                child: Row(
+                                  children: [
+                                    Text(Textos.txtTituloTarefa,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            fontSize: 17,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold)),
+                                    SizedBox(
+                                      width: larguraTela * 0.55,
+                                      child: TextFormField(
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return Textos.erroCampoVazio;
+                                            }
+                                            return null;
+                                          },
+                                          maxLines: 1,
+                                          maxLength: 50,
+                                          controller: _controllerTitulo,
+                                          keyboardType: TextInputType.text,
+                                          decoration: InputDecoration(
+                                            hintText: Textos.txtTituloTarefaHint,
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(
+                                                  width: 1, color: Colors.black),
+                                              borderRadius: BorderRadius.circular(5),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(
+                                                  width: 1, color: Colors.black),
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(
+                                                  width: 2, color: Colors.red),
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            focusedErrorBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(
+                                                  width: 1, color: Colors.black),
+                                              borderRadius: BorderRadius.circular(5),
+                                            ),
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 182,
+                                width: larguraTela,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: 160,
+                                      child: Column(
+                                        children: [
+                                          Text(Textos.txtData,
+                                              style: const TextStyle(
+                                                  fontSize: 17,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold)),
+                                          SizedBox(
+                                            height: 60,
+                                            child: TextField(
+                                              readOnly: true,
+                                              onTap: () async {
+                                                DateTime? novaData =
+                                                await showDatePicker(
+                                                    builder: (context, child) {
+                                                      return Theme(
+                                                          data: ThemeData.dark()
+                                                              .copyWith(
+                                                            colorScheme:
+                                                            const ColorScheme
+                                                                .light(
+                                                              primary: PaletaCores
+                                                                  .corAzulCianoClaro,
+                                                              onPrimary:
+                                                              Colors.white,
+                                                              onSurface:
+                                                              Colors.black,
+                                                            ),
+                                                            dialogBackgroundColor:
+                                                            Colors.white,
+                                                          ),
+                                                          child: child!);
+                                                    },
+                                                    context: context,
+                                                    initialDate: data,
+                                                    firstDate: DateTime(2000),
+                                                    lastDate: DateTime(2100));
+
+                                                if (novaData == null) return;
+                                                setState(() {
+                                                  data = novaData;
+                                                });
+                                              },
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                '${data.day}/${data.month}/${data.year}',
+                                                prefixIcon:
+                                                const Icon(Icons.date_range),
+                                                enabledBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      width: 1, color: Colors.black),
+                                                  borderRadius:
+                                                  BorderRadius.circular(10),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      width: 1, color: Colors.black),
+                                                  borderRadius:
+                                                  BorderRadius.circular(5),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: exibirMudarStatus,
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  width: 160,
+                                                  child: Text(Textos.txtMudarStatus,
+                                                      textAlign: TextAlign.center),
+                                                ),
+                                                Switch(
+                                                    value: mudarStatus,
+                                                    activeColor:
+                                                    PaletaCores.corAzulCianoClaro,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        mudarStatus = value;
+                                                      });
+                                                    }),
+                                              ],
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: !exibirMudarStatus,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: [
+                                                Text(Textos.tarefaSecreta),
+                                                Switch(
+                                                    value: tarefaSecreta,
+                                                    activeColor:
+                                                    PaletaCores.corAzulCianoClaro,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        tarefaSecreta = value;
+                                                        horaFormatada =
+                                                            Textos.horaSemPrazo;
+                                                        // redefindo valor da variavel ao desativar o switch
+                                                        if (!exibirDefinirHora) {
+                                                          horaFormatada = hora;
+                                                          formatarHora(hora);
+                                                        }
+                                                      });
+                                                    }),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                        width: 160,
+                                        child: Visibility(
+                                          visible: !tarefaSecreta,
+                                          child: Column(
+                                            children: [
+                                              Text(Textos.txtHora,
+                                                  style: const TextStyle(
+                                                      fontSize: 17,
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.bold)),
+                                              SizedBox(
+                                                  height: 60,
+                                                  child: Visibility(
+                                                    visible: !exibirDefinirHora,
+                                                    child: TextField(
+                                                      readOnly: true,
+                                                      decoration: InputDecoration(
+                                                        hintText:
+                                                        horaFormatada.toString(),
+                                                        prefixIcon: const Icon(
+                                                            Icons.access_time_filled),
+                                                        enabledBorder:
+                                                        OutlineInputBorder(
+                                                          borderSide:
+                                                          const BorderSide(
+                                                              width: 1,
+                                                              color:
+                                                              Colors.black),
+                                                          borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                        ),
+                                                        focusedBorder:
+                                                        OutlineInputBorder(
+                                                          borderSide:
+                                                          const BorderSide(
+                                                              width: 1,
+                                                              color:
+                                                              Colors.black),
+                                                          borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                        ),
+                                                      ),
+                                                      onTap: () async {
+                                                        TimeOfDay? novoHorario =
+                                                        await showTimePicker(
+                                                          context: context,
+                                                          initialTime: hora!,
+                                                          builder: (context, child) {
+                                                            return Theme(
+                                                              data: ThemeData.dark()
+                                                                  .copyWith(
+                                                                colorScheme:
+                                                                const ColorScheme
+                                                                    .light(
+                                                                  primary: PaletaCores
+                                                                      .corAzulCianoClaro,
+                                                                  onPrimary:
+                                                                  Colors.white,
+                                                                  surface:
+                                                                  Colors.white,
+                                                                  onSurface:
+                                                                  Colors.black,
+                                                                ),
+                                                              ),
+                                                              child: child!,
+                                                            );
+                                                          },
+                                                        );
+                                                        if (novoHorario != null) {
+                                                          setState(() {
+                                                            hora = novoHorario;
+                                                            formatarHora(hora);
+                                                          });
+                                                        }
+                                                      },
+                                                    ),
+                                                  )),
+                                              Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                                children: [
+                                                  Text(Textos.horaSemPrazo),
+                                                  Switch(
+                                                      value: exibirDefinirHora,
+                                                      activeColor: PaletaCores
+                                                          .corAzulCianoClaro,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          exibirDefinirHora = value;
+                                                          horaFormatada =
+                                                              Textos.horaSemPrazo;
+                                                          // redefindo valor da variavel ao desativar o switch
+                                                          if (!exibirDefinirHora) {
+                                                            horaFormatada = hora;
+                                                            formatarHora(hora);
+                                                          }
+                                                        });
+                                                      }),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: larguraTela,
+                                child: Text(Textos.txtDescricaoTarefa,
+                                    style: const TextStyle(
+                                        fontSize: 25,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                              SizedBox(
+                                width: larguraTela,
+                                height: 300,
                                 child: TextFormField(
                                     validator: (value) {
                                       if (value!.isEmpty) {
@@ -295,12 +577,11 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                                       }
                                       return null;
                                     },
-                                    maxLines: 1,
-                                    maxLength: 50,
-                                    controller: _controllerTitulo,
-                                    keyboardType: TextInputType.text,
+                                    maxLines: 100,
+                                    controller: _controllerConteudo,
+                                    keyboardType: TextInputType.multiline,
                                     decoration: InputDecoration(
-                                      hintText: Textos.txtTituloTarefaHint,
+                                      hintText: Textos.txtDescricaoTarefaHint,
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: const BorderSide(
                                             width: 1, color: Colors.black),
@@ -322,316 +603,43 @@ class _TelaEditarTarefaState extends State<TelaEditarTarefa> {
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                     )),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 182,
-                          width: larguraTela,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
                               SizedBox(
-                                width: 160,
+                                width: larguraTela,
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(Textos.txtData,
+                                    Text(Textos.txtCor,
                                         style: const TextStyle(
                                             fontSize: 17,
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold)),
                                     SizedBox(
-                                      height: 60,
-                                      child: TextField(
-                                        readOnly: true,
-                                        onTap: () async {
-                                          DateTime? novaData =
-                                              await showDatePicker(
-                                                  builder: (context, child) {
-                                                    return Theme(
-                                                        data: ThemeData.dark()
-                                                            .copyWith(
-                                                          colorScheme:
-                                                              const ColorScheme
-                                                                  .light(
-                                                            primary: PaletaCores
-                                                                .corAzulCianoClaro,
-                                                            onPrimary:
-                                                                Colors.white,
-                                                            onSurface:
-                                                                Colors.black,
-                                                          ),
-                                                          dialogBackgroundColor:
-                                                              Colors.white,
-                                                        ),
-                                                        child: child!);
-                                                  },
-                                                  context: context,
-                                                  initialDate: data,
-                                                  firstDate: DateTime(2000),
-                                                  lastDate: DateTime(2100));
-
-                                          if (novaData == null) return;
-                                          setState(() {
-                                            data = novaData;
-                                          });
-                                        },
-                                        decoration: InputDecoration(
-                                          hintText:
-                                              '${data.day}/${data.month}/${data.year}',
-                                          prefixIcon:
-                                              const Icon(Icons.date_range),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(
-                                                width: 1, color: Colors.black),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(
-                                                width: 1, color: Colors.black),
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: exibirMudarStatus,
-                                      child: Column(
+                                      width: larguraTela,
+                                      height: 100,
+                                      child: ListView(
+                                        scrollDirection: Axis.horizontal,
                                         children: [
-                                          SizedBox(
-                                            width: 160,
-                                            child: Text(Textos.txtMudarStatus,
-                                                textAlign: TextAlign.center),
-                                          ),
-                                          Switch(
-                                              value: mudarStatus,
-                                              activeColor:
-                                                  PaletaCores.corAzulCianoClaro,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  mudarStatus = value;
-                                                });
-                                              }),
-                                        ],
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: !exibirMudarStatus,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(Textos.tarefaSecreta),
-                                          Switch(
-                                              value: tarefaSecreta,
-                                              activeColor:
-                                                  PaletaCores.corAzulCianoClaro,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  tarefaSecreta = value;
-                                                  horaFormatada =
-                                                      Textos.horaSemPrazo;
-                                                  // redefindo valor da variavel ao desativar o switch
-                                                  if (!exibirDefinirHora) {
-                                                    horaFormatada = hora;
-                                                    formatarHora(hora);
-                                                  }
-                                                });
-                                              }),
+                                          ...itensCores
+                                              .map((e) => seletorCor(e))
+                                              .toList()
                                         ],
                                       ),
                                     )
                                   ],
                                 ),
-                              ),
-                              SizedBox(
-                                  width: 160,
-                                  child: Visibility(
-                                    visible: !tarefaSecreta,
-                                    child: Column(
-                                      children: [
-                                        Text(Textos.txtHora,
-                                            style: const TextStyle(
-                                                fontSize: 17,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold)),
-                                        SizedBox(
-                                            height: 60,
-                                            child: Visibility(
-                                              visible: !exibirDefinirHora,
-                                              child: TextField(
-                                                readOnly: true,
-                                                decoration: InputDecoration(
-                                                  hintText:
-                                                      horaFormatada.toString(),
-                                                  prefixIcon: const Icon(
-                                                      Icons.access_time_filled),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 1,
-                                                            color:
-                                                                Colors.black),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 1,
-                                                            color:
-                                                                Colors.black),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                  ),
-                                                ),
-                                                onTap: () async {
-                                                  TimeOfDay? novoHorario =
-                                                      await showTimePicker(
-                                                    context: context,
-                                                    initialTime: hora!,
-                                                    builder: (context, child) {
-                                                      return Theme(
-                                                        data: ThemeData.dark()
-                                                            .copyWith(
-                                                          colorScheme:
-                                                              const ColorScheme
-                                                                  .light(
-                                                            primary: PaletaCores
-                                                                .corAzulCianoClaro,
-                                                            onPrimary:
-                                                                Colors.white,
-                                                            surface:
-                                                                Colors.white,
-                                                            onSurface:
-                                                                Colors.black,
-                                                          ),
-                                                        ),
-                                                        child: child!,
-                                                      );
-                                                    },
-                                                  );
-                                                  if (novoHorario != null) {
-                                                    setState(() {
-                                                      hora = novoHorario;
-                                                      formatarHora(hora);
-                                                    });
-                                                  }
-                                                },
-                                              ),
-                                            )),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(Textos.horaSemPrazo),
-                                            Switch(
-                                                value: exibirDefinirHora,
-                                                activeColor: PaletaCores
-                                                    .corAzulCianoClaro,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    exibirDefinirHora = value;
-                                                    horaFormatada =
-                                                        Textos.horaSemPrazo;
-                                                    // redefindo valor da variavel ao desativar o switch
-                                                    if (!exibirDefinirHora) {
-                                                      horaFormatada = hora;
-                                                      formatarHora(hora);
-                                                    }
-                                                  });
-                                                }),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  )),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: larguraTela,
-                          child: Text(Textos.txtDescricaoTarefa,
-                              style: const TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                        SizedBox(
-                          width: larguraTela,
-                          height: 300,
-                          child: TextFormField(
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return Textos.erroCampoVazio;
-                                }
-                                return null;
-                              },
-                              maxLines: 100,
-                              controller: _controllerConteudo,
-                              keyboardType: TextInputType.multiline,
-                              decoration: InputDecoration(
-                                hintText: Textos.txtDescricaoTarefaHint,
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      width: 1, color: Colors.black),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      width: 1, color: Colors.black),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      width: 2, color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      width: 1, color: Colors.black),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              )),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: larguraTela,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(Textos.txtCor,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                              SizedBox(
-                                width: larguraTela,
-                                height: 100,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    ...itensCores
-                                        .map((e) => seletorCor(e))
-                                        .toList()
-                                  ],
-                                ),
                               )
                             ],
                           ),
-                        )
-                      ],
+                        ),
                     ),
-                  ),
+                    BloquearTelaWidget(
+                      item: widget.item,
+                    ),
+                  ],
                 )),
           )),
     );
