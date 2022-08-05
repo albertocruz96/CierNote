@@ -1,16 +1,3 @@
 # ciernote
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Aplicativo de criação de tarefas/lembretes. onde o usuario pode adicionar,editar e excluir uma tarefa. na tela inicial o usuario tem acesso a lista de tarefas,barra de pesquisa mudar a visualizacao da lista, botoes que direcionam para a tela de criacao de tarefa,tarefas em progresso e tarefas concluidas onde ele pode visualizar todas ou pesquisar pela data. tambem tem um menu onde ele tem acesso a tarefas/secretas que para serem exibidas necessitam de senha. para isso o usuario precisara cadastrar um usuario e uma senha. tarefas marcadas como favoritas e a lixeira. se o usuario desejar ele pode estar fixando um notificação na barra de status do dispositivo ou agendar a exibição desta notificação para determinado horario.
