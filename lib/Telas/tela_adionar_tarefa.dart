@@ -83,7 +83,6 @@ class _TelaAdionarTarefaState extends State<TelaAdionarTarefa> {
       setState((){
         ativarTelaUsuario = true;
       });
-      print("carai");
     }
   }
 
